@@ -212,7 +212,6 @@ namespace TestHarness
             DataTable dt = business.GetUserType(UserTypeId);
 
             Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No user type found");
-
         }
 
         [TestMethod]
@@ -222,6 +221,47 @@ namespace TestHarness
             DataTable dt = business.GetRecruiters();
 
             Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No recruiters found");
+        }
+
+        [TestMethod]
+        public void GetMiddleInitialsTest()
+        {
+            Business business = new Business(connectionString);
+            DataTable dt = business.GetMiddleInitials();
+
+            Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No middle initial found");
+        }
+
+        [TestMethod]
+        public void GetMiddleInitialTest()
+        {
+            int Id = 1;
+            Business business = new Business(connectionString);
+
+            string initial = business.GetMiddleInitial(Id);
+
+            Assert.IsTrue(initial.Length > 0, "FAIL: No middle initial found");
+        }
+
+        [TestMethod]
+        public void GetSuffixesTest()
+        {
+            Business business = new Business(connectionString);
+            DataTable dt = business.GetSuffixes();
+
+            Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No suffixes found");            
+        }
+
+        [TestMethod]
+        public void GetSuffixTest()
+        {
+            int Id = 1;
+            Business business = new Business(connectionString);
+
+            string initial = business.GetSuffix(Id);
+
+            Assert.IsTrue(initial.Length > 0, "FAIL: No suffix found");
+
         }
         #endregion
 
@@ -412,7 +452,7 @@ namespace TestHarness
         #region Mail Tests
 
         [TestMethod]
-        public void SendMailTest()
+        public void SendReferralTest()
         {
             Business business = new Business(connectionString);
             string from = "pjones@refermicro.com";

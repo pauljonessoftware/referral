@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage_MasterPage" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="SystemAdminMaster.master.cs" Inherits="MasterPage_SystemAdminMaster" %>
 
 <!DOCTYPE html>
 
@@ -7,14 +7,14 @@
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
-    <link type="text/css" rel="stylesheet" href="../style/StyleSheet.css" />
+    <link type="text/css" href="../Style/StyleSheet.css" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server">
         <div>
             <table style="width: 100%;">
                 <tr>
-                    <td style="width:97%; position:absolute; height:90%; padding: 5px;" align="center">
+                    <td style="width: 97%; position: absolute; height: 90%; padding: 5px;" align="center">
                         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                         </asp:ContentPlaceHolder>
                     </td>

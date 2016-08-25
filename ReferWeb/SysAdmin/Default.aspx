@@ -10,24 +10,39 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    <div>
-    <table class="">
-        
-        <tr>
-            <td>Username</td>
-            <td><asp:TextBox ID="txtUser" runat="server" /></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><asp:TextBox ID="txtPassword" TextMode="Password" runat="server" /></td>
-        </tr>
+        <div>
 
-        <tr>
-            <td></td>
-            <td><asp:Button ID="btnLogin" Text="Login" CssClass="" runat="server"/></td>
-        </tr>
-    </table>
-    </div>
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:100%; position:absolute;top:40%;" align="center">
+                        <table border="1" >
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">LOGIN</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 5px;">Username</td>
+                                <td style="text-align: left;">
+                                    <asp:TextBox ID="txtUser" CssClass="txtMedInput" runat="server" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 5px;">Password</td>
+                                <td style="text-align: left;">
+                                    <asp:TextBox ID="txtPassword" CssClass="txtMedInput" TextMode="Password" runat="server" /></td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding: 5px;">&nbsp;</td>
+                                <td style="text-align: left;">
+                                    <asp:Button ID="btnLogin" Text="Login" CssClass="" runat="server" /></td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
     </form>
 </body>
 </html>

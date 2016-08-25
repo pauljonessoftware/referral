@@ -6,3 +6,11 @@ C:\Referral\TestHarness\obj\Debug\TestHarness.csprojResolveAssemblyReference.cac
 C:\Referral\TestHarness\obj\Debug\TestHarness.dll
 C:\Referral\TestHarness\obj\Debug\TestHarness.pdb
 C:\Referral\TestHarness\bin\Debug\TestHarness.dll.config
+C:\MySource\Referral\TestHarness\bin\Debug\TestHarness.dll.config
+C:\MySource\Referral\TestHarness\bin\Debug\TestHarness.dll
+C:\MySource\Referral\TestHarness\bin\Debug\TestHarness.pdb
+C:\MySource\Referral\TestHarness\bin\Debug\ReferralMS.dll
+C:\MySource\Referral\TestHarness\bin\Debug\ReferralMS.pdb
+C:\MySource\Referral\TestHarness\obj\Debug\TestHarness.csprojResolveAssemblyReference.cache
+C:\MySource\Referral\TestHarness\obj\Debug\TestHarness.dll
+C:\MySource\Referral\TestHarness\obj\Debug\TestHarness.pdb

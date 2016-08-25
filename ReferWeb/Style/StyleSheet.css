@@ -1,2 +1,21 @@
-﻿body {
+﻿.tableOutline {
+    border-style:solid;
+    border-color:#C0C0C0;
+    border-width:thin;
+    width:920px;
 }
+
+.centered {
+    text-align:center;
+}
+
+.centered2 {
+  position: fixed;
+}
+
+
+.txtMedInput {
+    width:250px;
+}
+
+

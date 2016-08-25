@@ -363,7 +363,7 @@ namespace ReferralMS
         }
 
         public int AddRecruiterAccount(int UserTypeId, string FirstName, int MiddleInitialId, string LastName,
-            int SuffixId, string Username, string Password, int UserId, string Name, string URL)
+            int SuffixId, string Email, string Password, string CompanyName, string URL)
         {
             int rtn = -1;
 
@@ -373,10 +373,10 @@ namespace ReferralMS
                 int userId = AddUser(UserTypeId, FirstName, MiddleInitialId, LastName, SuffixId);
 
                 // Add User account
-                int businessId = AddAccount(Username, Password, userId);
+                int businessId = AddAccount(Email, Password, userId);
 
                 // Add Company
-                int companyId = AddCompany(Name, URL);
+                int companyId = AddCompany(CompanyName, URL);
 
                 // Add User Company Record
                 int UserCompanyId = AddUserCompany(userId, companyId);
@@ -883,5 +883,103 @@ namespace ReferralMS
         }
 
         #endregion
+
+        public DataTable GetMiddleInitials()
+        {
+            try
+            {
+                string commandText = "spGetMiddleInitials";
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] {  });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Read(cmd);
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetMiddleInitials");
+                return null;
+            }
+        }
+
+        public string GetMiddleInitial(int Id)
+        {
+            string MiddleInitial = string.Empty;
+
+            try
+            {
+                string commandText = "spGetMiddleInitial";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Input, DbType.Int32, Id.ToString());
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                DataTable dt = db.Read(cmd);
+
+                if (dt.Rows.Count > 0)
+                {
+                    MiddleInitial = dt.Rows[0]["MiddleInitial"].ToString();
+                }
+
+                return MiddleInitial;
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetUser");
+                return null;
+            }
+        }
+
+        public DataTable GetSuffixes()
+        {
+            try
+            {
+                string commandText = "spGetSuffixes";
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Read(cmd);
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetSuffixes");
+                return null;
+            }
+        }
+
+        public string GetSuffix(int Id)
+        {
+            string Suffix = string.Empty;
+
+            try
+            {
+                string commandText = "spGetSuffix";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Input, DbType.Int32, Id.ToString());
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                DataTable dt = db.Read(cmd);
+
+                if (dt.Rows.Count > 0)
+                {
+                    Suffix = dt.Rows[0]["Suffix"].ToString();
+                }
+
+                return Suffix;
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetSuffix");
+                return null;
+            }
+        }
     }
 }

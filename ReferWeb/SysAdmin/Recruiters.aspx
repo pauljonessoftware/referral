@@ -68,11 +68,11 @@
     </table>
 
     <table class="tableOutline" style="text-align: center; border-collapse: collapse; width: 920px; margin: 5px;">
-        <asp:GridView ID="grdRecruiters" runat="server" AutoGenerateColumns="false" OnRowDataBound="grdRecruiters_RowDataBound">
+        <asp:GridView ID="grdRecruiters" runat="server" AutoGenerateColumns="false" OnRowDataBound="grdRecruiters_RowDataBound" CssClass="tableOutline">
             <Columns>
                 <asp:TemplateField HeaderText="First Name">
                     <ItemTemplate>
-                        <asp:Label ID="txtFirstName" runat="server" Text='<% #Bind("firstName") %>' />
+                        <asp:Label CssClass="" ID="txtFirstName" runat="server" Text='<% #Bind("firstName") %>' />
                     </ItemTemplate>
                 </asp:TemplateField>
 

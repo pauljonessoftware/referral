@@ -420,6 +420,57 @@ namespace ReferralMS
             }
         }
 
+        public int AddNumber(string Number, int UserId, int NumberTypeId)
+        {
+            int rtn = -1;
+            try
+            {
+                string commandText = "spAddNumber";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
+                SqlParameter param1 = GetParameter("@Number", ParameterDirection.Input, DbType.String, Number.ToString());
+                SqlParameter param2 = GetParameter("@UserId", ParameterDirection.Input, DbType.Int32, UserId);
+                SqlParameter param3 = GetParameter("@NumberTypeId", ParameterDirection.Input, DbType.Int32, NumberTypeId.ToString());
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2, param3 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Add(cmd);
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "AddNumber");
+                return rtn;
+            }
+        }
+
+        public int AddLocation(string Location, int UserId)
+        {
+            int rtn = -1;
+            try
+            {
+                string commandText = "spAddLocation";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
+                SqlParameter param1 = GetParameter("@Location", ParameterDirection.Input, DbType.String, Location);
+                SqlParameter param2 = GetParameter("@UserId", ParameterDirection.Input, DbType.Int32, UserId);
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Add(cmd);
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "AddNumber");
+                return rtn;
+            }
+        }
+
         public int EditContact(int ContactId, string Value)
         {
             int rtn = -1;
@@ -978,6 +1029,66 @@ namespace ReferralMS
             catch (Exception exc)
             {
                 LogException(exc.Message, "GetSuffix");
+                return null;
+            }
+        }
+
+        public object GetYearsExperience()
+        {
+            try
+            {
+                string commandText = "spGetExperiences";
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Read(cmd);
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetYearsExperience");
+                return null;
+            }
+        }
+
+        public int AddCandidate(int UserTypeId, string FirstName, int MiddleInitialId, string LastName, 
+            int SuffixId, string Email, string Password, string Number, int NumberTypeId, 
+            string JobTitle, int ExperienceId, string Location)
+        {          
+            // add user
+            int UserId = AddUser(UserTypeId, FirstName, MiddleInitialId, LastName, SuffixId);
+
+            // add account
+            int accountId = AddAccount(Email, Password, UserId);
+
+            // add number
+            int numberId = AddNumber(Number, UserId, NumberTypeId);
+
+            // add qualification
+            int qualificationId = AddQualification(JobTitle, ExperienceId, UserId);
+
+            // add location
+            int locationId = AddLocation(Location, UserId);
+
+            return UserId;
+        }
+
+        public DataTable GetCandidates()
+        {
+            try
+            {
+                string commandText = "spGetCandidates";
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Read(cmd);
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetCandidates");
                 return null;
             }
         }

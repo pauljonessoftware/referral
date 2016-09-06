@@ -146,6 +146,41 @@ namespace TestHarness
         }
 
         [TestMethod]
+        public void AddCandidateTest()
+        {
+            string Email = "robertfrost@yahoo.com";
+            string Password = "Jacob12!";
+            int UserTypeId = 2;
+            string FirstName = "Rob";
+            int MiddleInitialId = 1;
+            string LastName = "Frost";
+            int SuffixId = 2;
+            string Number = "(803) 873-0392";
+            int NumberTypeId = 1;
+            string JobTitle = "Sr. .Net Engineer";
+            int ExperienceId = 4;
+            string Location = "Charlotte, NC";
+
+            Business business = new Business(connectionString);
+
+            int userId = business.AddCandidate(UserTypeId, FirstName, MiddleInitialId, LastName, SuffixId, Email, Password, Number, NumberTypeId, JobTitle, ExperienceId, Location);
+
+            Assert.IsTrue(userId > 0, "Error: No candidated added");
+        }
+
+        [TestMethod]
+        public void AddLocationTest()
+        {
+            string Location = "New York, Manhattan";
+            int UserId = 1;
+
+            Business business = new Business(connectionString);
+            int id = business.AddLocation(Location, UserId);
+
+            Assert.IsTrue(id > 0, "FAIL: location id");
+        }
+
+        [TestMethod]
         public void AddUserCompanyTest()
         {
             int UserId = 10;
@@ -156,6 +191,18 @@ namespace TestHarness
             UserCompanyId = business.AddUserCompany(UserId, CompanyId);
 
             Assert.IsTrue(UserCompanyId > 0, "FAIL: Invalid id");
+        }
+
+        [TestMethod]
+        public void AddNumberTest()
+        {
+            Business business = new Business(connectionString);
+            string Number = "(803) 873-6472";
+            int UserId = 1;
+            int NumberTypeId = 1;
+            int Id = business.AddNumber(Number, UserId, NumberTypeId);
+
+            Assert.IsTrue(Id > 0, "FAIL: No number added");
         }
 
         [TestMethod]
@@ -222,6 +269,16 @@ namespace TestHarness
 
             Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No recruiters found");
         }
+
+        [TestMethod]
+        public void GetCandidatesTest()
+        {
+            Business business = new Business(connectionString);
+            DataTable dt = business.GetCandidates();
+
+            Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No candidates found");
+        }
+
 
         [TestMethod]
         public void GetMiddleInitialsTest()

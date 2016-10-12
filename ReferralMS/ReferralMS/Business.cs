@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -69,6 +70,17 @@ namespace ReferralMS
         {
             SqlParameter param = new SqlParameter();
             param.DbType = ParamType;
+            param.ParameterName = Name;
+            param.Direction = Direction;
+
+            return param;
+        }
+
+        private SqlParameter GetParameter(string Name, ParameterDirection Direction, DbType ParamType, byte[] Value)
+        {
+            SqlParameter param = new SqlParameter();
+            param.DbType = ParamType;
+            param.Value = Value;
             param.ParameterName = Name;
             param.Direction = Direction;
 
@@ -1054,7 +1066,7 @@ namespace ReferralMS
 
         public int AddCandidate(int UserTypeId, string FirstName, int MiddleInitialId, string LastName, 
             int SuffixId, string Email, string Password, string Number, int NumberTypeId, 
-            string JobTitle, int ExperienceId, string Location)
+            string JobTitle, int ExperienceId, string Location, DataTable Files)
         {          
             // add user
             int UserId = AddUser(UserTypeId, FirstName, MiddleInitialId, LastName, SuffixId);
@@ -1070,6 +1082,17 @@ namespace ReferralMS
 
             // add location
             int locationId = AddLocation(Location, UserId);
+
+            // add resume
+            if (Files != null && Files.Rows.Count > 0)
+            {
+                DataRow row = Files.Rows[0];
+                string fileName = row["Name"].ToString();
+                string fileType = row["FileType"].ToString();
+                byte[] data = (byte[]) row["Data"];
+
+                UpLoadFile(fileName, fileType, data, UserId);
+            }
 
             return UserId;
         }
@@ -1091,6 +1114,57 @@ namespace ReferralMS
                 LogException(exc.Message, "GetCandidates");
                 return null;
             }
+        }
+
+        public int UpLoadFile(string Name, string FileType, byte[] Data, int UserId)
+        {
+            using (Stream stream = new MemoryStream(Data))
+            {
+                stream.Read(Data, 0, Data.Length);
+
+                int rtn = -1;
+
+                try
+                {
+                    string commandText = "spUploadFile";
+
+                    SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
+                    SqlParameter param1 = GetParameter("@Name", ParameterDirection.Input, DbType.String, Name);
+                    SqlParameter param2 = GetParameter("@FileType", ParameterDirection.Input, DbType.String, FileType);
+                    SqlParameter param3 = GetParameter("@Data", ParameterDirection.Input, DbType.Binary, Data);
+                    SqlParameter param4 = GetParameter("@UserId", ParameterDirection.Input, DbType.Int32, UserId);
+
+                    SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2, param3, param4 });
+                    cmd.CommandText = commandText;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    return db.Add(cmd);
+                }
+                catch (Exception exc)
+                {
+                    LogException(exc.Message, "UpLoadFile");
+                    return rtn;
+                }
+            }
+        }
+
+        public DataTable GetFilesTable()
+        {
+            DataTable dt = new DataTable("Files");
+            DataColumn col1 = new DataColumn("Name", System.Type.GetType("System.String"));
+            DataColumn col2 = new DataColumn("FileType", System.Type.GetType("System.String"));
+            DataColumn col3 = new DataColumn("Data", System.Type.GetType("System.Byte[]"));
+            DataColumn col4 = new DataColumn("UserId", System.Type.GetType("System.Int32"));
+
+            dt.Columns.Add(col1);
+            dt.Columns.Add(col2);
+            dt.Columns.Add(col3);
+            dt.Columns.Add(col4);
+
+            DataRow row = dt.NewRow();
+            dt.Rows.Add(row);
+
+            return dt;
         }
     }
 }

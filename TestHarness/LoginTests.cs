@@ -145,28 +145,28 @@ namespace TestHarness
             Assert.IsTrue(UserCompanyId > 0, "FAIL: Invalid id");
         }
 
-        [TestMethod]
-        public void AddCandidateTest()
-        {
-            string Email = "robertfrost@yahoo.com";
-            string Password = "Jacob12!";
-            int UserTypeId = 2;
-            string FirstName = "Rob";
-            int MiddleInitialId = 1;
-            string LastName = "Frost";
-            int SuffixId = 2;
-            string Number = "(803) 873-0392";
-            int NumberTypeId = 1;
-            string JobTitle = "Sr. .Net Engineer";
-            int ExperienceId = 4;
-            string Location = "Charlotte, NC";
+        //[TestMethod]
+        //public void AddCandidateTest()
+        //{
+        //    string Email = "robertfrost@yahoo.com";
+        //    string Password = "Jacob12!";
+        //    int UserTypeId = 2;
+        //    string FirstName = "Rob";
+        //    int MiddleInitialId = 1;
+        //    string LastName = "Frost";
+        //    int SuffixId = 2;
+        //    string Number = "(803) 873-0392";
+        //    int NumberTypeId = 1;
+        //    string JobTitle = "Sr. .Net Engineer";
+        //    int ExperienceId = 4;
+        //    string Location = "Charlotte, NC";
 
-            Business business = new Business(connectionString);
+        //    Business business = new Business(connectionString);
 
-            int userId = business.AddCandidate(UserTypeId, FirstName, MiddleInitialId, LastName, SuffixId, Email, Password, Number, NumberTypeId, JobTitle, ExperienceId, Location);
+        //    int userId = business.AddCandidate(UserTypeId, FirstName, MiddleInitialId, LastName, SuffixId, Email, Password, Number, NumberTypeId, JobTitle, ExperienceId, Location);
 
-            Assert.IsTrue(userId > 0, "Error: No candidated added");
-        }
+        //    Assert.IsTrue(userId > 0, "Error: No candidated added");
+        //}
 
         [TestMethod]
         public void AddLocationTest()
@@ -306,7 +306,7 @@ namespace TestHarness
             Business business = new Business(connectionString);
             DataTable dt = business.GetSuffixes();
 
-            Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No suffixes found");            
+            Assert.IsTrue(dt.Rows.Count > 0, "FAIL: No suffixes found");
         }
 
         [TestMethod]
@@ -555,6 +555,14 @@ namespace TestHarness
             SqlConnection conn = database.GetOpenConnection();
 
             Assert.IsTrue(conn.State == ConnectionState.Open, "FAIL: No connection");
+        }
+
+        [TestMethod]
+        public void CreateDataTableTest()
+        {
+            Business business = new Business(connectionString);
+
+            DataTable dt = business.GetFilesTable();
         }
         #endregion
     }

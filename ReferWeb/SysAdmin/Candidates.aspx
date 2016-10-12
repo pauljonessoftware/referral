@@ -17,8 +17,8 @@
     <table class="tableOutline" style="text-align: center; border-collapse: collapse; width: 920px; margin: 5px;">
         
         <tr>
-            <td style="text-align: right; padding: 5px;">First Name:</td>
-            <td style="text-align: left;">
+            <td style="text-align: right; padding: 5px; width:300px;">First Name:</td>
+            <td style="text-align: left; width:620px;">
                 <asp:TextBox ID="txtFirstName" CssClass="txtMedInput" runat="server" /></td>
         </tr>
         
@@ -70,6 +70,16 @@
         </tr>
 
         <tr>
+            <td style="text-align: right; padding: 5px;">Resume:</td>
+            <td style="text-align: left;">
+                <asp:FileUpload ID="fileUploadControl" runat="server"  />
+                <asp:Button ID="btnUpload" runat="server" Text="Upload" OnClick="btnUpload_Click" />
+                <br />
+                <asp:Label runat="server" ID="lblStatus" Text="" Visible="false" />
+            </td>
+        </tr>
+
+        <tr>
             <td style="text-align: right; padding: 5px; vertical-align:top;">Preferred Work Location:</td>
             <td style="text-align: left;">
                 <asp:TextBox ID="txtLocation" CssClass="txtMedInput" TextMode="MultiLine" Rows="6" Columns="40" runat="server" /></td>
@@ -90,7 +100,16 @@
     </table>
 
     <table class="tableOutline" style="text-align: center; border-collapse: collapse; width: 920px; margin: 5px;">
-        <asp:GridView ID="grdCandidates" runat="server" AutoGenerateColumns="false" CssClass="tableOutline" OnRowDataBound="grdCandidates_RowDataBound" OnRowCancelingEdit="grdCandidates_RowCancelingEdit" OnRowEditing="grdCandidates_RowEditing" OnRowUpdating="grdCandidates_RowUpdating">
+        <asp:GridView 
+            ID="grdCandidates" 
+            runat="server" 
+            AutoGenerateColumns="false" 
+            CssClass="tableOutline" 
+            OnRowDataBound="grdCandidates_RowDataBound" 
+            OnRowCancelingEdit="grdCandidates_RowCancelingEdit" 
+            OnRowEditing="grdCandidates_RowEditing" 
+            OnRowUpdating="grdCandidates_RowUpdating">
+
             <Columns>
                 <asp:TemplateField HeaderText="First Name">
                     <ItemTemplate>

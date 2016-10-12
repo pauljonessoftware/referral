@@ -1,7 +1,9 @@
 ﻿using ReferralMS;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -95,11 +97,91 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
         int experienceId = int.Parse(ddlExperience.SelectedValue);
         string location = txtLocation.Text;
         string comments = txtComments.Text;
+        DataTable Files = null;
 
-        business.AddCandidate(userTypeId, firstName, middleInitialId, lastName, suffixId, email, 
-            password, number, numberTypeId, jobTitle, experienceId, location);
+        if (Session["Files"] != null)
+        {
+            Files = (DataTable)Session["Files"];
+        }
+
+        int UserId = business.AddCandidate(userTypeId, firstName, middleInitialId, lastName, suffixId, email,
+            password, number, numberTypeId, jobTitle, experienceId, location, Files);
+
+        Files = null;
+        Session["Files"] = null;
 
         Response.Redirect("Candidates.aspx");
+    }
+
+    protected void btnUpload_Click(object sender, EventArgs e)
+    {
+        Business business = new Business(Utility.ConnectionString());
+        DataTable dt = business.GetFilesTable();
+
+        string FileType = string.Empty;
+
+        if (fileUploadControl.HasFile)
+        {
+            try
+            {
+                long fileSize = fileUploadControl.FileContent.Length;
+
+                // limit file upload size to 100K
+                if (fileSize < 100000)
+                {
+                    // file name
+                    string Name = Path.GetFileName(fileUploadControl.FileName);
+
+                    // file data
+                    byte[] Data = fileUploadControl.FileBytes;
+
+                    // file extension
+                    string extension = Name.Substring(Name.LastIndexOf(".") + 1);
+
+                    switch (extension)
+                    {
+                        case "doc":
+                            FileType = "application/vnd.ms-word";
+                            break;
+                        case "docx":
+                            FileType = "application/vnd.ms-word";
+                            break;
+                        case "xls":
+                            FileType = "application/vnd.ms-excel";
+                            break;
+                        case "xlsx":
+                            FileType = "application/vnd.ms-excel";
+                            break;
+                        case "pdf":
+                            FileType = "application/pdf";
+                            break;
+                        default:
+                            lblStatus.Text = "ERROR: Invalid file type. Resume uploads are limited to Word, Excel and PDFs.";
+                            break;
+                    }
+
+                    DataRow row = dt.Rows[0];
+                    row["Name"] = Name;
+                    row["FileType"] = FileType;
+                    row["Data"] = Data;
+
+                    Session["Files"] = dt;
+
+                    lblStatus.Text = Name + " uploaded";
+                    lblStatus.Visible = true;
+                }
+                else
+                {
+                    lblStatus.Text = "ERROR: The file is too large. Resume uploads are limited to 100K bytes.";
+                    lblStatus.Visible = true;
+                }
+            }
+            catch (Exception exc)
+            {
+                lblStatus.Text = "Upload status: The file could not be uploaded. The following error occured: " + exc.Message;
+                lblStatus.Visible = true;
+            }
+        }
     }
 
     protected void btnAddAndCAN_Click(object sender, EventArgs e)
@@ -140,13 +222,16 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
         grdCandidates.EditIndex = index;
         BindGridView();
     }
+
     protected void grdCandidates_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
         grdCandidates.EditIndex = -1;
         BindGridView();
     }
+
     protected void grdCandidates_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
 
     }
+
 }

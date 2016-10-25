@@ -10,6 +10,14 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 
     <asp:HiddenField ID="hdnUserType" runat="server" Value="3" />
+    <table style="text-align: left; border-collapse: collapse; width:920px;">
+        <tr>
+            <td class="pageTitle"><asp:LinkButton ID="lnkAdmin" runat="server" Text="Admin" PostBackUrl="~/SysAdmin/Switchboard.aspx" /></td>
+        </tr>
+    </table>
+
+    <div style="height: 10px;">&nbsp;</div>
+
     <table class="tableOutline" style="text-align: left; border-collapse: collapse; width: 920px; margin: 5px;">
         <tr>
             <td>Add Recruiter</td>

@@ -234,4 +234,39 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
 
     }
 
+    protected void lnkTickle_Click(object sender, EventArgs e)
+    {
+        string name = string.Empty;
+        string fileType = string.Empty;
+        string from = ConfigurationManager.AppSettings["From"];
+        string subject = ConfigurationManager.AppSettings["ReferralSubject"];
+        byte[] data = null;
+        Business business = new Business(Utility.ConnectionString());
+        LinkButton lnkRefer = (LinkButton)sender;
+
+        int Id = Int32.Parse(lnkRefer.CommandArgument);
+        DataTable dtCandidate = business.GetCandidate(Id);
+        DataTable file = business.GetFile(Id);
+
+        if (file.Rows.Count > 0)
+        {
+            DataRow row = file.Rows[0];
+
+            name = row["Name"].ToString();
+            fileType = row["FileType"].ToString();
+            data = (byte[])row["Data"];
+
+            business.SendMessage(dtCandidate, from, subject);
+        }
+
+        Response.Redirect("EmailSent.aspx?MessageType=Tickler");
+    }
+
+    protected void lnkRefer_Click(object sender, EventArgs e)
+    {
+        LinkButton lnkRefer = (LinkButton)sender;
+        int Id = Int32.Parse(lnkRefer.CommandArgument);
+        Session["UserId"] = Id;
+        Response.Redirect("RecruiterList.aspx");
+    }
 }

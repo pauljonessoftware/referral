@@ -5,10 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Forms;
 using System.Drawing;
-using Microsoft.VisualStudio.TestTools.UITesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestTools.UITest.Extension;
-using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
 using ReferralMS;
 using System.Data.SqlClient;
 using System.Data;
@@ -21,7 +18,7 @@ namespace TestHarness
     /// <summary>
     /// Summary description for CodedUITest1
     /// </summary>
-    [CodedUITest]
+    [TestClass]
     public class LoginTests
     {
         #region Members
@@ -517,9 +514,9 @@ namespace TestHarness
             string subject = "Resource Available";
             string body = ".Net Engineer for new assignment";
 
-            int numberOfMessagesSent = business.SendMessage(from, subject, to, body);
+            //int numberOfMessagesSent = business.SendMessage(from, subject, to, body);
 
-            Assert.IsTrue(numberOfMessagesSent > 0, "ERROR: No messages sent");
+            //Assert.IsTrue(numberOfMessagesSent > 0, "ERROR: No messages sent");
         }
 
         [TestMethod]
@@ -565,5 +562,38 @@ namespace TestHarness
             DataTable dt = business.GetFilesTable();
         }
         #endregion
+
+
+        [TestMethod]
+        public void GetFileTest()
+        {
+            int id = 1;
+
+            Business business = new Business(Utility.ConnectionString());
+
+            DataTable dt = business.GetFile(id);
+
+            Assert.IsTrue(dt.Rows.Count > 0, "file record found");
+
+            DataRow row = dt.Rows[0];
+            Byte[] data = (Byte[])row["Data"];
+
+            Assert.IsTrue(data.Length > 0, "No resume found");
+        }
+
+
+        [TestMethod]
+        public void SendReferralWithAttachmentTest()
+        {
+            Business business = new Business(connectionString);
+            string from = "pjones@refermicro.com";
+            string to = "recruiter@recruiter.com";
+            string subject = "Resource Available";
+            string body = ".Net Engineer for new assignment";
+
+            //int numberOfMessagesSent = business.SendMessage(from, subject, to, body);
+
+            //Assert.IsTrue(numberOfMessagesSent > 0, "ERROR: No messages sent");
+        }
     }
 }

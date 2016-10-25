@@ -374,6 +374,61 @@ namespace ReferralMS
             }
         }
 
+        public DataTable GetRecruiters(List<int> lstRecruiterIds)
+        {
+            string recruiterIds = GetCommaDelimitedList(lstRecruiterIds);
+
+            try
+            {
+                //string commandText = "spGetRecruitersFromIds";
+
+                //SqlParameter param0 = GetParameter("@RecruiterIds", ParameterDirection.Input, DbType.Int32, recruiterIds);
+                //SqlCommand cmd = GetCommand(new SqlParameter[] { param0 });
+                //cmd.CommandText = commandText;
+                //cmd.CommandType = CommandType.StoredProcedure;
+
+                //return db.Read(cmd);
+
+                 
+                string sql = "SELECT U.[UserId], U.[UserTypeId], U.[FirstName] ,U.[MiddleInitialId] ,U.[LastName] ,U.[SuffixId] ,U.[Active] ,A.Email ,C.Name Company ";
+                sql += ",C.URL FROM [dbo].[TblUser] U INNER JOIN [dbo].TblAccount A ON U.UserId = A.UserId INNER JOIN Referral..xUserCompany xC ON ";
+                sql += "U.UserId = xC.UserId INNER JOIN Referral..TblCompany C ON xC.CompanyId = c.Id WHERE U.UserTypeId = 3 AND u.UserId IN ("; 
+                sql += recruiterIds + ")";
+
+                string commandText = sql;
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] {  });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.Text;
+
+                return db.Read(cmd);
+
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "spGetRecruitersFromIds");
+                return null;
+            }
+        }
+
+        private string GetCommaDelimitedList(List<int> lstRecruiterIds)
+        {
+            string lst = string.Empty;
+
+            for (int i = 0; i < lstRecruiterIds.Count; i++)
+            {
+                lst += lstRecruiterIds[i].ToString();
+
+                if (i < lstRecruiterIds.Count - 1)
+                {
+                    lst += ",";
+                }
+            }
+
+            return lst;
+        }
+
         public int AddRecruiterAccount(int UserTypeId, string FirstName, int MiddleInitialId, string LastName,
             int SuffixId, string Email, string Password, string CompanyName, string URL)
         {
@@ -799,7 +854,7 @@ namespace ReferralMS
 
         #region Mail Methods
 
-        public int SendMessage(string From, string Subject, string To, string Body)
+        public int SendMessage(DataTable dtCandidate, string From, string Subject)
         {
             int rtn = -1;
 
@@ -807,14 +862,14 @@ namespace ReferralMS
             {
                 int numberOfMessages = 0;
                 string recruiterEmailAddress = string.Empty;
-                string firstName = string.Empty;
-                string lastName = string.Empty;
 
                 MailMessage mm = new MailMessage();
-                mm.From = GetMailAddress(From); ;
+                mm.From = GetMailAddress(From);
                 mm.Subject = Subject;
-                mm.Body = Body;
-                mm.IsBodyHtml = false;
+
+                // Create body from candidate datatable parameter
+                mm.Body = GetTicklerBody(dtCandidate);
+                mm.IsBodyHtml = true;
                 mm.Bcc.Add(GetMailAddress(From));
 
                 DataTable dtRecruiters = GetRecruiters();
@@ -822,8 +877,6 @@ namespace ReferralMS
                 foreach (DataRow row in dtRecruiters.Rows)
                 {
                     recruiterEmailAddress = row["email"].ToString();
-                    firstName = row["firstName"].ToString();
-                    lastName = row["lastName"].ToString();
                     mm.Bcc.Add(GetMailAddress(recruiterEmailAddress));
                     numberOfMessages++;
                 }
@@ -838,6 +891,103 @@ namespace ReferralMS
                 LogException(exc.Message, "SendMessage");
                 return rtn;
             }
+        }
+
+        public int SendMessageWithAttachment(List<int> lstRecruiterIds, DataTable dtCandidate, string From, 
+            string Subject, byte[] Attachment, String FileName, String MediaType)
+        {
+            int rtn = -1;
+
+            try
+            {
+                int numberOfMessages = 0;
+                string recruiterEmailAddress = string.Empty;
+                MemoryStream ms = new MemoryStream(Attachment);
+
+                MailMessage mm = new MailMessage();
+                mm.From = GetMailAddress(From);
+                mm.Subject = Subject;
+
+                // Create body from candidate datatable parameter
+
+                mm.Body = GetBody(dtCandidate);
+                mm.IsBodyHtml = true;
+                mm.Bcc.Add(GetMailAddress(From));
+                mm.Attachments.Add(new Attachment(ms, FileName, MediaType));
+
+                DataTable dtRecruiters = GetRecruiters(lstRecruiterIds);
+
+                foreach (DataRow row in dtRecruiters.Rows)
+                {
+                    recruiterEmailAddress = row["email"].ToString();
+                    mm.Bcc.Add(GetMailAddress(recruiterEmailAddress));
+                    numberOfMessages++;
+                }
+
+                GetSMTPServer().Send(mm);
+
+                return numberOfMessages;
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "SendMessage");
+                return rtn;
+            }
+        }
+
+        private string GetTicklerBody(DataTable dtCandidate)
+        {
+            DataRow row = dtCandidate.Rows[0];
+
+            string experience = row["Experience"].ToString();
+            string title = row["JobTitle"].ToString();
+            string location = row["Location"].ToString();
+
+            string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
+            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td>Dear Recruiter,<p/>";
+            body += "We have a lead on a " + title + " with " + experience + " experience looking for a new opportunity in the " + location + " area. ";
+            body += "If you are interested in this lead and will offer a competitive referral fee, contact us at your earliest convenience.";
+            body += "<p>&nbsp;</p>Regards,<p/><div style=\"font-weight:bold; font-size:large; color:#303030;\">";
+            body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
+            body += "(803) 873-6472</div><div>Twitter: @paulajonesjr</div></td></tr></table></body></html>";
+
+            return body;
+        }
+
+        private string GetBody(DataTable dtCandidate)
+        {
+            DataRow row = dtCandidate.Rows[0];
+
+            string firstName = row["FirstName"].ToString();
+            string middleInitial = row["MiddleInitial"].ToString();
+            string lastName = row["LastName"].ToString();
+            string suffix = row["Suffix"].ToString();
+            string email = row["Email"].ToString();
+            string phone = row["Number"].ToString();
+            string experience = row["Experience"].ToString();
+            string title = row["JobTitle"].ToString();
+
+            string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
+            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td><span style=\"font-size:20pt; font-weight:bold;\">DEAR RECRUITER,</span><p>";
+            body += "The Information Technology Human Resource below is immediately available for a new assignment.<p>";
+            body += "<b>CONTACT INFORMATION</b><p>";
+            body += firstName + " " + middleInitial + ". " + lastName + " " + suffix;
+            body += "<br />" + title + "<br />";
+            body += phone + "<br>" + email + "<p/>";
+            body += "Resume attached.<p/>";
+            body += "Regards,<p>&nbsp;</>";
+            body += "<div style=\"font-weight:bold; font-size:large; color:#303030;\">";
+            body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
+            body += "(803) 873-6472</div>";
+            body += "<div><a href=\"https://twitter.com/paulajonesjr\" class=\"twitter-follow-button\" data-show-count=\"false\">Follow @paulajonesjr</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
+            body += "</td></tr></table></body></html>";
+
+            return body;
         }
 
         private SmtpClient GetSMTPServer()
@@ -953,7 +1103,7 @@ namespace ReferralMS
             {
                 string commandText = "spGetMiddleInitials";
 
-                SqlCommand cmd = GetCommand(new SqlParameter[] {  });
+                SqlCommand cmd = GetCommand(new SqlParameter[] { });
                 cmd.CommandText = commandText;
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -1064,10 +1214,10 @@ namespace ReferralMS
             }
         }
 
-        public int AddCandidate(int UserTypeId, string FirstName, int MiddleInitialId, string LastName, 
-            int SuffixId, string Email, string Password, string Number, int NumberTypeId, 
+        public int AddCandidate(int UserTypeId, string FirstName, int MiddleInitialId, string LastName,
+            int SuffixId, string Email, string Password, string Number, int NumberTypeId,
             string JobTitle, int ExperienceId, string Location, DataTable Files)
-        {          
+        {
             // add user
             int UserId = AddUser(UserTypeId, FirstName, MiddleInitialId, LastName, SuffixId);
 
@@ -1089,7 +1239,7 @@ namespace ReferralMS
                 DataRow row = Files.Rows[0];
                 string fileName = row["Name"].ToString();
                 string fileType = row["FileType"].ToString();
-                byte[] data = (byte[]) row["Data"];
+                byte[] data = (byte[])row["Data"];
 
                 UpLoadFile(fileName, fileType, data, UserId);
             }
@@ -1166,5 +1316,48 @@ namespace ReferralMS
 
             return dt;
         }
+
+        public DataTable GetFile(int Id)
+        {
+            try
+            {
+                string commandText = "spGetResume";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Input, DbType.Int32, Id.ToString());
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Read(cmd);
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetFile");
+                return null;
+            }
+        }
+
+        public DataTable GetCandidate(int Id)
+        {
+            try
+            {
+                string commandText = "spGetCandidate";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Input, DbType.Int32, Id.ToString());
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Read(cmd);
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "GetCandidate");
+                return null;
+            }
+        }
+
     }
 }

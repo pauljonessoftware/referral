@@ -66,6 +66,19 @@ namespace ReferralMS
             return dt;
         }
 
+        public SqlDataReader GetReader(SqlCommand cmd)
+        {
+            SqlDataReader reader = null;
+
+            using (SqlConnection conn = GetOpenConnection())
+            {
+                cmd.Connection = conn;
+                reader = cmd.ExecuteReader();
+            }
+
+            return reader;
+        }
+
         public SqlConnection GetOpenConnection()
         {
             SqlConnection conn = new SqlConnection();
@@ -76,5 +89,6 @@ namespace ReferralMS
         }
 
         #endregion
+
     }
 }

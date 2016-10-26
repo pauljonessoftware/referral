@@ -20,7 +20,6 @@
                                 <td>&nbsp;</td>
                                 <td style="text-align: left;">LOGIN</td>
                             </tr>
-                            <a href="Default.aspx">Default.aspx</a>
                             <tr>
                                 <td style="text-align: right; padding: 5px;">Email</td>
                                 <td style="text-align: left;">

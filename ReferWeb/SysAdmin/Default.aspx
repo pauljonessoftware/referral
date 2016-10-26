@@ -21,9 +21,9 @@
                                 <td style="text-align: left;">LOGIN</td>
                             </tr>
                             <tr>
-                                <td style="text-align: right; padding: 5px;">Username</td>
+                                <td style="text-align: right; padding: 5px;">Email</td>
                                 <td style="text-align: left;">
-                                    <asp:TextBox ID="txtUser" CssClass="txtMedInput" runat="server" /></td>
+                                    <asp:TextBox ID="txtEmail" CssClass="txtMedInput" runat="server" /></td>
                             </tr>
                             <tr>
                                 <td style="text-align: right; padding: 5px;">Password</td>

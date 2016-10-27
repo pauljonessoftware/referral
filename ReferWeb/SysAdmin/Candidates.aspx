@@ -6,20 +6,14 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <asp:HiddenField ID="hdnUserType" runat="server" Value="2" />
     <asp:HiddenField ID="hdnNumberTypeId" runat="server" Value="1" />
-    <table style="text-align: left; border-collapse: collapse; width:920px;">
-        <tr>
-            <td class="pageTitle"><asp:LinkButton ID="lnkAdmin" runat="server" Text="Admin" PostBackUrl="~/SysAdmin/Switchboard.aspx" /></td>
-        </tr>
-    </table>
 
     <div style="height: 10px;">&nbsp;</div>
+
     <table class="tableOutline" style="text-align: left; border-collapse: collapse; width: 920px; margin: 5px;">
         <tr>
             <td>Add Candidate</td>
         </tr>
     </table>
-
-    <div style="height: 10px;">&nbsp;</div>
 
     <table class="tableOutline" style="text-align: center; border-collapse: collapse; width: 920px; margin: 5px;">
         

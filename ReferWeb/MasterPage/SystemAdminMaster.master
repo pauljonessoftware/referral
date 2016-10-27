@@ -14,9 +14,36 @@
         <div>
             <table style="width: 100%;">
                 <tr>
-                    <td style="width: 97%; position: absolute; height: 90%; padding: 5px;" align="center">
+                    <td style="width: 97%; height: 90%; padding: 5px;" align="center">
+                        <table class="tableNoOutline" style="text-align: left; border-collapse: collapse;">
+                            <tr>
+                                <td>
+                                    <asp:LinkButton ID="lnkAdmin" runat="server" Text="Admin" PostBackUrl="~/SysAdmin/Switchboard.aspx" />
+                                    |
+                                    <asp:LinkButton ID="lnkLogout" runat="server" Text="Logout" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 97%; padding: 5px;" align="center">
                         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                         </asp:ContentPlaceHolder>
+                    </td>
+                </tr>
+            </table>
+
+            <table style="width:97%">
+                <tr>
+                    <td style="width: 97%; padding: 5px;" align="center">
+                        <table class="tableNoOutline" style="text-align: center; border-collapse: collapse;">
+                            <tr>
+                                <td>
+                                    Clearasoft.com V1.0 &copy;2016. All Rights Reserved.
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>

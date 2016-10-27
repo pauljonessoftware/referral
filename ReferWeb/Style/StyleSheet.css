@@ -6,6 +6,11 @@
     margin:5px;
 }
 
+.tableNoOutline {
+    width:920px;
+    margin:5px;
+}
+
 .centered {
     text-align:center;
 }

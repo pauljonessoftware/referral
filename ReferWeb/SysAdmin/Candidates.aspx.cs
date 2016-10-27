@@ -205,7 +205,6 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
             DropDownList ddlMiddleInitial = (DropDownList)row.FindControl("ddlMiddleInitial");
             BindMiddleInitialDDL(ddlMiddleInitial);
 
-
             Label lblSuffixId = (Label)row.FindControl("lblSuffixId");
             if (lblSuffixId.Text.Length > 0)
             {
@@ -213,6 +212,13 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
             }
             DropDownList ddlSuffix = (DropDownList)row.FindControl("ddlSuffix");
             BindSuffixDDL(ddlSuffix);
+
+            LinkButton btnTickle = (LinkButton)row.FindControl("lnkTickle");
+            btnTickle.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to send an availability notice for this candidate?')");
+
+
+            LinkButton btn = (LinkButton)row.FindControl("lnkRefer");
+            btn.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to refer this candidate?')");
         }
     }
 

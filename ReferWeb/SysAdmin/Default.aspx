@@ -34,7 +34,7 @@
                             <tr>
                                 <td style="padding: 5px;">&nbsp;</td>
                                 <td style="text-align: left;">
-                                    <asp:Button ID="btnLogin" Text="Login" CssClass="" runat="server" /></td>
+                                    <asp:Button ID="btnLogin" Text="Login" CssClass="" runat="server" OnClick="btnLogin_Click" /></td>
                             </tr>
 
                         </table>

@@ -1,4 +1,5 @@
 ﻿#region Namespace References
+using ReferralMS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,20 @@ public partial class SysAdmin_Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-            //string username = 
-        }
+
+    }
+
+    protected void btnLogin_Click(object sender, EventArgs e)
+    {
+        string email = txtEmail.Text;
+        string password = txtPassword.Text;
+
+        Business business = new Business(Utility.ConnectionString());
+
+        bool isLoggedIn = business.Login(email, password);
+
+        Session["IsLoggedIn"] = isLoggedIn;
+
+        Response.Redirect("Switchboard.aspx");
     }
 }

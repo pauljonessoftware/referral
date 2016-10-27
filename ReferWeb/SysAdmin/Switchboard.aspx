@@ -3,11 +3,11 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <table style="text-align: left; border-collapse: collapse; width:920px;">
+<%--    <table style="text-align: left; border-collapse: collapse; width:920px;">
         <tr>
             <td class="pageTitle"><asp:LinkButton ID="lnkAdmin" runat="server" Text="Admin" PostBackUrl="~/SysAdmin/Switchboard.aspx" /></td>
         </tr>
-    </table>
+    </table>--%>
 
     <div style="height: 10px;">&nbsp;</div>
 

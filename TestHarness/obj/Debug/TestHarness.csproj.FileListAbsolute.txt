@@ -14,3 +14,11 @@ C:\MySource\Referral\TestHarness\bin\Debug\ReferralMS.pdb
 C:\MySource\Referral\TestHarness\obj\Debug\TestHarness.csprojResolveAssemblyReference.cache
 C:\MySource\Referral\TestHarness\obj\Debug\TestHarness.dll
 C:\MySource\Referral\TestHarness\obj\Debug\TestHarness.pdb
+C:\MyCode\TestHarness\bin\Debug\TestHarness.dll.config
+C:\MyCode\TestHarness\bin\Debug\TestHarness.dll
+C:\MyCode\TestHarness\bin\Debug\TestHarness.pdb
+C:\MyCode\TestHarness\bin\Debug\ReferralMS.dll
+C:\MyCode\TestHarness\bin\Debug\ReferralMS.pdb
+C:\MyCode\TestHarness\obj\Debug\TestHarness.csprojResolveAssemblyReference.cache
+C:\MyCode\TestHarness\obj\Debug\TestHarness.dll
+C:\MyCode\TestHarness\obj\Debug\TestHarness.pdb

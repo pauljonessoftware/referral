@@ -542,27 +542,6 @@ namespace TestHarness
 
             Assert.IsTrue(errorLogId > 0, "ERROR: Logging failed.");
         }
-        #endregion
-
-        #region Database Tests
-
-        [TestMethod]
-        public void GetOpenDatabaseConnectionTest()
-        {
-            SqlConnection conn = database.GetOpenConnection();
-
-            Assert.IsTrue(conn.State == ConnectionState.Open, "FAIL: No connection");
-        }
-
-        [TestMethod]
-        public void CreateDataTableTest()
-        {
-            Business business = new Business(connectionString);
-
-            DataTable dt = business.GetFilesTable();
-        }
-        #endregion
-
 
         [TestMethod]
         public void GetFileTest()
@@ -595,5 +574,36 @@ namespace TestHarness
 
             //Assert.IsTrue(numberOfMessagesSent > 0, "ERROR: No messages sent");
         }
+
+        #endregion
+
+        #region Referral Tests
+        [TestMethod]
+        public void LogReferralTest()
+        {
+            Business business = new Business(Utility.ConnectionString());
+
+            int id = business.LogReferral();
+        }
+        #endregion
+
+        #region Database Tests
+
+        [TestMethod]
+        public void GetOpenDatabaseConnectionTest()
+        {
+            SqlConnection conn = database.GetOpenConnection();
+
+            Assert.IsTrue(conn.State == ConnectionState.Open, "FAIL: No connection");
+        }
+
+        [TestMethod]
+        public void CreateDataTableTest()
+        {
+            Business business = new Business(connectionString);
+
+            DataTable dt = business.GetFilesTable();
+        }
+        #endregion
     }
 }

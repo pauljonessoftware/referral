@@ -1359,5 +1359,31 @@ namespace ReferralMS
             }
         }
 
+        public int LogReferral(double Rate, int CandidateId, int RecruiterId, string Comments)
+        {
+            int rtn = -1;
+            try
+            {
+                string commandText = "spLogReferral";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
+                SqlParameter param1 = GetParameter("@Rate", ParameterDirection.Input, DbType.Double, Rate);
+                SqlParameter param2 = GetParameter("@CandidateId", ParameterDirection.Input, DbType.Int32, CandidateId);
+                SqlParameter param3 = GetParameter("@RecruiterId", ParameterDirection.Input, DbType.Int32, RecruiterId);
+                SqlParameter param4 = GetParameter("@Comments", ParameterDirection.Input, DbType.String, Comments);
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2, param3, param4 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Add(cmd);
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "LogReferral");
+                return rtn;
+            }
+        }
     }
 }

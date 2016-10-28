@@ -581,9 +581,16 @@ namespace TestHarness
         [TestMethod]
         public void LogReferralTest()
         {
+            
             Business business = new Business(Utility.ConnectionString());
+            double Rate = 5.0;
+            int CandidateId = 1;
+            int RecruiterId = 2;
+            string Comments = "Candidate referred to So&So Technologies, Inc.";
 
-            int id = business.LogReferral();
+            int id = business.LogReferral(Rate, CandidateId, RecruiterId, Comments);
+
+            Assert.IsTrue(id > 0, "ERROR: Failed to log referral");
         }
         #endregion
 

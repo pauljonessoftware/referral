@@ -8,3 +8,8 @@ C:\MySource\Referral\ReferralMS\ReferralMS\bin\Debug\ReferralMS.pdb
 C:\MySource\Referral\ReferralMS\ReferralMS\obj\Debug\ReferralMS.csprojResolveAssemblyReference.cache
 C:\MySource\Referral\ReferralMS\ReferralMS\obj\Debug\ReferralMS.dll
 C:\MySource\Referral\ReferralMS\ReferralMS\obj\Debug\ReferralMS.pdb
+C:\MyCode\ReferralMS\ReferralMS\bin\Debug\ReferralMS.dll
+C:\MyCode\ReferralMS\ReferralMS\bin\Debug\ReferralMS.pdb
+C:\MyCode\ReferralMS\ReferralMS\obj\Debug\ReferralMS.csprojResolveAssemblyReference.cache
+C:\MyCode\ReferralMS\ReferralMS\obj\Debug\ReferralMS.dll
+C:\MyCode\ReferralMS\ReferralMS\obj\Debug\ReferralMS.pdb

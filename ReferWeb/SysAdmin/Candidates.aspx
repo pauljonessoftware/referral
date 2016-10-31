@@ -176,17 +176,17 @@
                 <asp:templatefield>
                     <itemtemplate>
                         <asp:LinkButton 
-                            ID="lnkTickle" 
+                            ID="lnkNotice" 
                             runat="server" 
-                            Text="Tickle" 
+                            Text="Send Notice" 
                             CommandArgument='<% #Bind("UserID") %>' 
-                            CommandName="Tickle" 
-                            OnClick="lnkTickle_Click" />
+                            CommandName="Notice" 
+                            OnClick="lnkNotice_Click" />
                         |
                         <asp:LinkButton 
                             ID="lnkRefer" 
                             runat="server" 
-                            Text="Refer" 
+                            Text="Send Referral" 
                             CommandArgument='<% #Bind("UserID") %>' 
                             CommandName="Refer" 
                             OnClick="lnkRefer_Click" />

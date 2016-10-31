@@ -854,12 +854,19 @@ namespace ReferralMS
 
         #region Mail Methods
 
-        public int SendMessage(DataTable dtCandidate, string From, string Subject)
+        public int SendNotice(DataTable dtCandidate, string From, string Subject)
         {
             int rtn = -1;
 
             try
             {
+                int candidateId = 0;
+                if (dtCandidate.Rows.Count > 0)
+                {
+                    DataRow row = dtCandidate.Rows[0];
+                    candidateId = Int32.Parse(row["UserId"].ToString());
+                }
+
                 int numberOfMessages = 0;
                 string recruiterEmailAddress = string.Empty;
 
@@ -868,7 +875,7 @@ namespace ReferralMS
                 mm.Subject = Subject;
 
                 // Create body from candidate datatable parameter
-                mm.Body = GetTicklerBody(dtCandidate);
+                mm.Body = GetNoticeText(dtCandidate);
                 mm.IsBodyHtml = true;
                 mm.Bcc.Add(GetMailAddress(From));
 
@@ -883,6 +890,8 @@ namespace ReferralMS
 
                 GetSMTPServer().Send(mm);
 
+                LogNotice(candidateId, numberOfMessages);
+
                 return numberOfMessages;
 
             }
@@ -894,14 +903,23 @@ namespace ReferralMS
         }
 
         public int SendMessageWithAttachment(List<int> lstRecruiterIds, DataTable dtCandidate, string From, 
-            string Subject, byte[] Attachment, String FileName, String MediaType)
+            string Subject, byte[] Attachment, String FileName, String MediaType, double Amount)
         {
             int rtn = -1;
 
             try
             {
+                int candidateId = 0;
                 int numberOfMessages = 0;
+                int recruiterId = 0;              
                 string recruiterEmailAddress = string.Empty;
+
+                if (dtCandidate.Rows.Count > 0)
+                {
+                    DataRow row = dtCandidate.Rows[0];
+                    candidateId = Int32.Parse(row["UserId"].ToString());
+                }
+
                 MemoryStream ms = new MemoryStream(Attachment);
 
                 MailMessage mm = new MailMessage();
@@ -919,9 +937,12 @@ namespace ReferralMS
 
                 foreach (DataRow row in dtRecruiters.Rows)
                 {
+                    recruiterId = int.Parse(row["UserId"].ToString());
                     recruiterEmailAddress = row["email"].ToString();
                     mm.Bcc.Add(GetMailAddress(recruiterEmailAddress));
                     numberOfMessages++;
+
+                    LogReferral(Amount, candidateId, recruiterId, null);
                 }
 
                 GetSMTPServer().Send(mm);
@@ -936,7 +957,7 @@ namespace ReferralMS
             }
         }
 
-        private string GetTicklerBody(DataTable dtCandidate)
+        private string GetNoticeText(DataTable dtCandidate)
         {
             DataRow row = dtCandidate.Rows[0];
 
@@ -946,13 +967,16 @@ namespace ReferralMS
 
             string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
             body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
-            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td>Dear Recruiter,<p/>";
-            body += "We have a lead on a " + title + " with " + experience + " experience looking for a new opportunity in the " + location + " area. ";
-            body += "If you are interested in this lead and will offer a competitive referral fee, contact us at your earliest convenience.";
-            body += "<p>&nbsp;</p>Regards,<p/><div style=\"font-weight:bold; font-size:large; color:#303030;\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+            body += "Dear Recruiter,<br><br>";
+            body += "Clearasoft Technology Solutions, LLC has identified a highly qualified " + title + " with " + experience + " ";
+            body += "experience. He/she is looking for an exciting and challenging new opportunity in the " + location + " area. ";
+            body += "If you are interested in this lead, please contact us at your earliest convenience. The referral fee is 10% negotiable. ";
+            body += "<br><br>Regards,<p>&nbsp;</p>";
+            body += "<div style=\"font-weight:bold; font-size:large; color:#303030;\">";
             body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
-            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
-            body += "(803) 873-6472</div><div>Twitter: @paulajonesjr</div></td></tr></table></body></html>";
+            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">clearasoftware@gmail.com</a></div><div>Mobile: ";
+            body += "(803) 873-6472</div><div>Twitter: @clearasoftware</div></td></tr></table></body></html>";
 
             return body;
         }
@@ -1359,7 +1383,7 @@ namespace ReferralMS
             }
         }
 
-        public int LogReferral(double Rate, int CandidateId, int RecruiterId, string Comments)
+        public int LogReferral(double Amount, int CandidateId, int RecruiterId, string Comments)
         {
             int rtn = -1;
             try
@@ -1367,7 +1391,7 @@ namespace ReferralMS
                 string commandText = "spLogReferral";
 
                 SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
-                SqlParameter param1 = GetParameter("@Rate", ParameterDirection.Input, DbType.Double, Rate);
+                SqlParameter param1 = GetParameter("@Amount", ParameterDirection.Input, DbType.Double, Amount);
                 SqlParameter param2 = GetParameter("@CandidateId", ParameterDirection.Input, DbType.Int32, CandidateId);
                 SqlParameter param3 = GetParameter("@RecruiterId", ParameterDirection.Input, DbType.Int32, RecruiterId);
                 SqlParameter param4 = GetParameter("@Comments", ParameterDirection.Input, DbType.String, Comments);
@@ -1382,6 +1406,31 @@ namespace ReferralMS
             catch (Exception exc)
             {
                 LogException(exc.Message, "LogReferral");
+                return rtn;
+            }
+        }
+
+        public int LogNotice(int CandidateId, int NumberOfMessagesSent)
+        {
+            int rtn = -1;
+            try
+            {
+                string commandText = "spLogNotice";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
+                SqlParameter param1 = GetParameter("@CandidateId", ParameterDirection.Input, DbType.Int32, CandidateId);
+                SqlParameter param2 = GetParameter("@NumberOfMessagesSent", ParameterDirection.Input, DbType.Int32, NumberOfMessagesSent);
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Add(cmd);
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "LogNotice");
                 return rtn;
             }
         }

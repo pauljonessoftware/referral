@@ -52,6 +52,8 @@ public partial class SysAdmin_RecruiterList : System.Web.UI.Page
         GridView grd = grdRecruiters;
         List<int> lstRecruiterId = new List<int>();
         int Id = 0;
+        double amount = double.Parse(txtAmount.Text);
+        string rate = ddlRate.SelectedValue;
 
         foreach (GridViewRow row in grd.Rows)
         {
@@ -67,11 +69,11 @@ public partial class SysAdmin_RecruiterList : System.Web.UI.Page
             }
         }
 
-        SendEmail(lstRecruiterId);
+        SendEmail(lstRecruiterId, amount, rate);
         Response.Redirect("EmailSent.aspx?MessageType=Referral");
     }
 
-    private void SendEmail(List<int> lstRecruiterIds)
+    private void SendEmail(List<int> lstRecruiterIds, double amount, string rate)
     {
         string name = string.Empty;
         string fileType = string.Empty;
@@ -94,7 +96,7 @@ public partial class SysAdmin_RecruiterList : System.Web.UI.Page
             fileType = row["FileType"].ToString();
             data = (byte[])row["Data"];
 
-            business.SendMessageWithAttachment(lstRecruiterIds, dtCandidate, from, subject, data, name, fileType);
+            business.SendMessageWithAttachment(lstRecruiterIds, dtCandidate, from, subject, data, name, fileType, amount);
 
             Response.Redirect("EmailSent.aspx?MessageType=Referral Acknowledgement");
         }

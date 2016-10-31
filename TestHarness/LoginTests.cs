@@ -93,7 +93,7 @@ namespace TestHarness
         [TestMethod]
         public void AddUserTest()
         {
-            int UserTypeId = 3;
+            int UserTypeId = 3;     // user type
             string FirstName = "Paul";
             int MiddleInitialId = 0;
             string LastName = "Jones";
@@ -581,7 +581,6 @@ namespace TestHarness
         [TestMethod]
         public void LogReferralTest()
         {
-            
             Business business = new Business(Utility.ConnectionString());
             double Rate = 5.0;
             int CandidateId = 1;
@@ -589,6 +588,19 @@ namespace TestHarness
             string Comments = "Candidate referred to So&So Technologies, Inc.";
 
             int id = business.LogReferral(Rate, CandidateId, RecruiterId, Comments);
+
+            Assert.IsTrue(id > 0, "ERROR: Failed to log referral");
+        }
+
+        [TestMethod]
+        public void LogNoticeTest()
+        {
+            Business business = new Business(Utility.ConnectionString());
+            
+            int CandidateId = 1;
+            int NumberOfMessagesSent = 56;
+
+            int id = business.LogNotice(CandidateId, NumberOfMessagesSent);
 
             Assert.IsTrue(id > 0, "ERROR: Failed to log referral");
         }

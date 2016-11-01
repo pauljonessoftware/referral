@@ -854,12 +854,19 @@ namespace ReferralMS
 
         #region Mail Methods
 
-        public int SendMessage(DataTable dtCandidate, string From, string Subject)
+        public int SendNotice(DataTable dtCandidate, string From, string Subject)
         {
             int rtn = -1;
 
             try
             {
+                int candidateId = 0;
+                if (dtCandidate.Rows.Count > 0)
+                {
+                    DataRow row = dtCandidate.Rows[0];
+                    candidateId = Int32.Parse(row["UserId"].ToString());
+                }
+
                 int numberOfMessages = 0;
                 string recruiterEmailAddress = string.Empty;
 
@@ -868,7 +875,7 @@ namespace ReferralMS
                 mm.Subject = Subject;
 
                 // Create body from candidate datatable parameter
-                mm.Body = GetTicklerBody(dtCandidate);
+                mm.Body = GetNoticeText(dtCandidate);
                 mm.IsBodyHtml = true;
                 mm.Bcc.Add(GetMailAddress(From));
 
@@ -883,6 +890,8 @@ namespace ReferralMS
 
                 GetSMTPServer().Send(mm);
 
+                LogNotice(candidateId, numberOfMessages);
+
                 return numberOfMessages;
 
             }
@@ -894,14 +903,23 @@ namespace ReferralMS
         }
 
         public int SendMessageWithAttachment(List<int> lstRecruiterIds, DataTable dtCandidate, string From, 
-            string Subject, byte[] Attachment, String FileName, String MediaType)
+            string Subject, byte[] Attachment, String FileName, String MediaType, double Amount)
         {
             int rtn = -1;
 
             try
             {
+                int candidateId = 0;
                 int numberOfMessages = 0;
+                int recruiterId = 0;              
                 string recruiterEmailAddress = string.Empty;
+
+                if (dtCandidate.Rows.Count > 0)
+                {
+                    DataRow row = dtCandidate.Rows[0];
+                    candidateId = Int32.Parse(row["UserId"].ToString());
+                }
+
                 MemoryStream ms = new MemoryStream(Attachment);
 
                 MailMessage mm = new MailMessage();
@@ -910,7 +928,7 @@ namespace ReferralMS
 
                 // Create body from candidate datatable parameter
 
-                mm.Body = GetBody(dtCandidate);
+                mm.Body = GetReferralText(dtCandidate);
                 mm.IsBodyHtml = true;
                 mm.Bcc.Add(GetMailAddress(From));
                 mm.Attachments.Add(new Attachment(ms, FileName, MediaType));
@@ -919,9 +937,12 @@ namespace ReferralMS
 
                 foreach (DataRow row in dtRecruiters.Rows)
                 {
+                    recruiterId = int.Parse(row["UserId"].ToString());
                     recruiterEmailAddress = row["email"].ToString();
                     mm.Bcc.Add(GetMailAddress(recruiterEmailAddress));
                     numberOfMessages++;
+
+                    LogReferral(Amount, candidateId, recruiterId, null);
                 }
 
                 GetSMTPServer().Send(mm);
@@ -936,7 +957,7 @@ namespace ReferralMS
             }
         }
 
-        private string GetTicklerBody(DataTable dtCandidate)
+        private string GetNoticeText(DataTable dtCandidate)
         {
             DataRow row = dtCandidate.Rows[0];
 
@@ -945,19 +966,26 @@ namespace ReferralMS
             string location = row["Location"].ToString();
 
             string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
-            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
-            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td>Dear Recruiter,<p/>";
-            body += "We have a lead on a " + title + " with " + experience + " experience looking for a new opportunity in the " + location + " area. ";
-            body += "If you are interested in this lead and will offer a competitive referral fee, contact us at your earliest convenience.";
-            body += "<p>&nbsp;</p>Regards,<p/><div style=\"font-weight:bold; font-size:large; color:#303030;\">";
-            body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
-            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
-            body += "(803) 873-6472</div><div>Twitter: @paulajonesjr</div></td></tr></table></body></html>";
+            body += "<head><title>Resource Availability Notice: Clearasoft Technology Solutions, LLC </title>";
+            body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+            body += "Dear Recruiter,<br><br>";
+            body += "Clearasoft Technology Solutions, LLC has identified a highly qualified " + title + " with " + experience + " ";
+            body += "experience. He/she is looking for an exciting and challenging new opportunity in the " + location + " area. ";
+            body += "If you are interested in this lead, please contact us at your earliest convenience. The referral fee is 10% negotiable. ";
+            body += "<br><br>Regards,<p>&nbsp;</p>";
+            body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
+            body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+            body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div>";
+            body += "<div>Mobile: (803) 873-6472";
+            body += "<div><a href=\"https://twitter.com/clearasoftware\" class=\"twitter-follow-button\" data-show-count=\"false\">";
+            body += "Follow @clearasoftware</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
+            body += "</td></tr></table></body></html>";
 
             return body;
         }
 
-        private string GetBody(DataTable dtCandidate)
+        private string GetReferralText(DataTable dtCandidate)
         {
             DataRow row = dtCandidate.Rows[0];
 
@@ -969,22 +997,30 @@ namespace ReferralMS
             string phone = row["Number"].ToString();
             string experience = row["Experience"].ToString();
             string title = row["JobTitle"].ToString();
+            string location = row["Location"].ToString();
 
             string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
-            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
-            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td><span style=\"font-size:20pt; font-weight:bold;\">DEAR RECRUITER,</span><p>";
-            body += "The Information Technology Human Resource below is immediately available for a new assignment.<p>";
-            body += "<b>CONTACT INFORMATION</b><p>";
+            body += "<head><title>IT Referral: Clearasoft Technology Solutions, LLC </title>";
+            body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+            body += "<div style=\"color:#d8610d; font-weight:bold;\">Dear Recruiter,</div><div style=\"height:10pt;\"></div>";
+            body += "The Information Technology professional below is seeking a new employment opportunity in the ";
+            body += location + " area. His/her resume is attached.<br><div style=\"height:10pt;\"></div>";
+            body += "<div style=\"color:#d8610d; font-weight:bold;\">Candidate Information</div>";
+            body += "<div style=\"height:10pt;\">&nbsp;</div>";
             body += firstName + " " + middleInitial + ". " + lastName + " " + suffix;
             body += "<br />" + title + "<br />";
-            body += phone + "<br>" + email + "<p/>";
-            body += "Resume attached.<p/>";
-            body += "Regards,<p>&nbsp;</>";
-            body += "<div style=\"font-weight:bold; font-size:large; color:#303030;\">";
-            body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
-            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
+            body += "Phone: " + phone + "<br>";
+            body += "Email: " + email;
+            body += "<div style=\"height:20pt;\">&nbsp;</div>";
+            body += "Regards,";
+            body += "<div style=\"height:20pt;\">&nbsp;</div>";
+            body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
+            body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+            body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div><div>Mobile: ";
             body += "(803) 873-6472</div>";
-            body += "<div><a href=\"https://twitter.com/paulajonesjr\" class=\"twitter-follow-button\" data-show-count=\"false\">Follow @paulajonesjr</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
+            body += "<div><a href=\"https://twitter.com/clearasoftware\" class=\"twitter-follow-button\" data-show-count=\"false\">";
+            body += "Follow @clearasoftware</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
             body += "</td></tr></table></body></html>";
 
             return body;
@@ -1359,5 +1395,56 @@ namespace ReferralMS
             }
         }
 
+        public int LogReferral(double Amount, int CandidateId, int RecruiterId, string Comments)
+        {
+            int rtn = -1;
+            try
+            {
+                string commandText = "spLogReferral";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
+                SqlParameter param1 = GetParameter("@Amount", ParameterDirection.Input, DbType.Double, Amount);
+                SqlParameter param2 = GetParameter("@CandidateId", ParameterDirection.Input, DbType.Int32, CandidateId);
+                SqlParameter param3 = GetParameter("@RecruiterId", ParameterDirection.Input, DbType.Int32, RecruiterId);
+                SqlParameter param4 = GetParameter("@Comments", ParameterDirection.Input, DbType.String, Comments);
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2, param3, param4 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Add(cmd);
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "LogReferral");
+                return rtn;
+            }
+        }
+
+        public int LogNotice(int CandidateId, int NumberOfMessagesSent)
+        {
+            int rtn = -1;
+            try
+            {
+                string commandText = "spLogNotice";
+
+                SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
+                SqlParameter param1 = GetParameter("@CandidateId", ParameterDirection.Input, DbType.Int32, CandidateId);
+                SqlParameter param2 = GetParameter("@NumberOfMessagesSent", ParameterDirection.Input, DbType.Int32, NumberOfMessagesSent);
+
+                SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2 });
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                return db.Add(cmd);
+
+            }
+            catch (Exception exc)
+            {
+                LogException(exc.Message, "LogNotice");
+                return rtn;
+            }
+        }
     }
 }

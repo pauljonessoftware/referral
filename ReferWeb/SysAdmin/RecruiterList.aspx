@@ -5,7 +5,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:HiddenField ID="hdnUserType" runat="server" Value="3" />
-<%--    <table style="text-align: left; border-collapse: collapse; width:920px;">
+    <%--    <table style="text-align: left; border-collapse: collapse; width:920px;">
         <tr>
             <td class="pageTitle"><asp:LinkButton ID="lnkAdmin" runat="server" Text="Admin" PostBackUrl="~/SysAdmin/Switchboard.aspx" /></td>
         </tr>
@@ -83,6 +83,13 @@
         </tr>
         <tr>
             <td style="text-align: right; width: 100%;">
+                Referral Rate: $ 
+                <asp:TextBox ID="txtAmount" runat="server" CssClass="txtXXSmall" />&nbsp;          
+                <asp:DropDownList ID="ddlRate" runat="server">
+                    <asp:ListItem Value="per/hr." Text="per/hr." Selected="True"></asp:ListItem>
+                    <asp:ListItem Value="flat fee" Text="flat fee" Selected="false"></asp:ListItem>
+                </asp:DropDownList>
+                &nbsp;
                 <asp:Button
                     ID="btnReferCandidate"
                     runat="server"

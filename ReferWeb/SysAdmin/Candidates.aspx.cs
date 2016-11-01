@@ -213,9 +213,8 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
             DropDownList ddlSuffix = (DropDownList)row.FindControl("ddlSuffix");
             BindSuffixDDL(ddlSuffix);
 
-            LinkButton btnTickle = (LinkButton)row.FindControl("lnkTickle");
-            btnTickle.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to send an availability notice for this candidate?')");
-
+            LinkButton lnkNotice = (LinkButton)row.FindControl("lnkNotice");
+            lnkNotice.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to send an availability notice for this candidate?')");
 
             LinkButton btn = (LinkButton)row.FindControl("lnkRefer");
             btn.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to refer this candidate?')");
@@ -240,7 +239,7 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
 
     }
 
-    protected void lnkTickle_Click(object sender, EventArgs e)
+    protected void lnkNotice_Click(object sender, EventArgs e)
     {
         string name = string.Empty;
         string fileType = string.Empty;
@@ -262,11 +261,12 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
             fileType = row["FileType"].ToString();
             data = (byte[])row["Data"];
 
-            business.SendMessage(dtCandidate, from, subject);
+            business.SendNotice(dtCandidate, from, subject);
         }
 
         Response.Redirect("EmailSent.aspx?MessageType=Tickler");
     }
+
 
     protected void lnkRefer_Click(object sender, EventArgs e)
     {

@@ -11,20 +11,20 @@ public partial class MasterPage_SystemAdminMaster : System.Web.UI.MasterPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        bool isLoggedIn = false;
+        //bool isLoggedIn = false;
 
-        if (!IsPostBack)
-        {
-            if (Session["IsLoggedIn"] != null)
-            {
-                isLoggedIn = (bool)Session["IsLoggedIn"];
-            }
+        //if (!IsPostBack)
+        //{
+        //    if (Session["IsLoggedIn"] != null)
+        //    {
+        //        isLoggedIn = (bool)Session["IsLoggedIn"];
+        //    }
 
-            if (isLoggedIn == false)
-            {
-                // redirect to login screen
-                Response.Redirect("default.aspx");
-            }
-        }
+        //    if (isLoggedIn == false)
+        //    {
+        //        // redirect to login screen
+        //        Response.Redirect("default.aspx");
+        //    }
+        //}
     }
 }

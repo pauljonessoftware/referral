@@ -93,7 +93,7 @@ namespace TestHarness
         [TestMethod]
         public void AddUserTest()
         {
-            int UserTypeId = 3;
+            int UserTypeId = 3;     // user type
             string FirstName = "Paul";
             int MiddleInitialId = 0;
             string LastName = "Jones";
@@ -542,27 +542,6 @@ namespace TestHarness
 
             Assert.IsTrue(errorLogId > 0, "ERROR: Logging failed.");
         }
-        #endregion
-
-        #region Database Tests
-
-        [TestMethod]
-        public void GetOpenDatabaseConnectionTest()
-        {
-            SqlConnection conn = database.GetOpenConnection();
-
-            Assert.IsTrue(conn.State == ConnectionState.Open, "FAIL: No connection");
-        }
-
-        [TestMethod]
-        public void CreateDataTableTest()
-        {
-            Business business = new Business(connectionString);
-
-            DataTable dt = business.GetFilesTable();
-        }
-        #endregion
-
 
         [TestMethod]
         public void GetFileTest()
@@ -595,5 +574,55 @@ namespace TestHarness
 
             //Assert.IsTrue(numberOfMessagesSent > 0, "ERROR: No messages sent");
         }
+
+        #endregion
+
+        #region Referral Tests
+        [TestMethod]
+        public void LogReferralTest()
+        {
+            Business business = new Business(Utility.ConnectionString());
+            double Rate = 5.0;
+            int CandidateId = 1;
+            int RecruiterId = 2;
+            string Comments = "Candidate referred to So&So Technologies, Inc.";
+
+            int id = business.LogReferral(Rate, CandidateId, RecruiterId, Comments);
+
+            Assert.IsTrue(id > 0, "ERROR: Failed to log referral");
+        }
+
+        [TestMethod]
+        public void LogNoticeTest()
+        {
+            Business business = new Business(Utility.ConnectionString());
+            
+            int CandidateId = 1;
+            int NumberOfMessagesSent = 56;
+
+            int id = business.LogNotice(CandidateId, NumberOfMessagesSent);
+
+            Assert.IsTrue(id > 0, "ERROR: Failed to log referral");
+        }
+        #endregion
+
+        #region Database Tests
+
+        [TestMethod]
+        public void GetOpenDatabaseConnectionTest()
+        {
+            SqlConnection conn = database.GetOpenConnection();
+
+            Assert.IsTrue(conn.State == ConnectionState.Open, "FAIL: No connection");
+        }
+
+        [TestMethod]
+        public void CreateDataTableTest()
+        {
+            Business business = new Business(connectionString);
+
+            DataTable dt = business.GetFilesTable();
+        }
+        #endregion
     }
 }

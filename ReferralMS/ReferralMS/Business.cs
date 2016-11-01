@@ -928,7 +928,7 @@ namespace ReferralMS
 
                 // Create body from candidate datatable parameter
 
-                mm.Body = GetBody(dtCandidate);
+                mm.Body = GetReferralText(dtCandidate);
                 mm.IsBodyHtml = true;
                 mm.Bcc.Add(GetMailAddress(From));
                 mm.Attachments.Add(new Attachment(ms, FileName, MediaType));
@@ -966,22 +966,26 @@ namespace ReferralMS
             string location = row["Location"].ToString();
 
             string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
-            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "<head><title>Resource Availability Notice: Clearasoft Technology Solutions, LLC </title>";
+            body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
             body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
             body += "Dear Recruiter,<br><br>";
             body += "Clearasoft Technology Solutions, LLC has identified a highly qualified " + title + " with " + experience + " ";
             body += "experience. He/she is looking for an exciting and challenging new opportunity in the " + location + " area. ";
             body += "If you are interested in this lead, please contact us at your earliest convenience. The referral fee is 10% negotiable. ";
             body += "<br><br>Regards,<p>&nbsp;</p>";
-            body += "<div style=\"font-weight:bold; font-size:large; color:#303030;\">";
-            body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
-            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">clearasoftware@gmail.com</a></div><div>Mobile: ";
-            body += "(803) 873-6472</div><div>Twitter: @clearasoftware</div></td></tr></table></body></html>";
+            body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
+            body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+            body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div>";
+            body += "<div>Mobile: (803) 873-6472";
+            body += "<div><a href=\"https://twitter.com/clearasoftware\" class=\"twitter-follow-button\" data-show-count=\"false\">";
+            body += "Follow @clearasoftware</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
+            body += "</td></tr></table></body></html>";
 
             return body;
         }
 
-        private string GetBody(DataTable dtCandidate)
+        private string GetReferralText(DataTable dtCandidate)
         {
             DataRow row = dtCandidate.Rows[0];
 
@@ -993,22 +997,30 @@ namespace ReferralMS
             string phone = row["Number"].ToString();
             string experience = row["Experience"].ToString();
             string title = row["JobTitle"].ToString();
+            string location = row["Location"].ToString();
 
             string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
-            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
-            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td><span style=\"font-size:20pt; font-weight:bold;\">DEAR RECRUITER,</span><p>";
-            body += "The Information Technology Human Resource below is immediately available for a new assignment.<p>";
-            body += "<b>CONTACT INFORMATION</b><p>";
+            body += "<head><title>IT Referral: Clearasoft Technology Solutions, LLC </title>";
+            body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+            body += "<div style=\"color:#d8610d; font-weight:bold;\">Dear Recruiter,</div><div style=\"height:10pt;\"></div>";
+            body += "The Information Technology professional below is seeking a new employment opportunity in the ";
+            body += location + " area. His/her resume is attached.<br><div style=\"height:10pt;\"></div>";
+            body += "<div style=\"color:#d8610d; font-weight:bold;\">Candidate Information</div>";
+            body += "<div style=\"height:10pt;\">&nbsp;</div>";
             body += firstName + " " + middleInitial + ". " + lastName + " " + suffix;
             body += "<br />" + title + "<br />";
-            body += phone + "<br>" + email + "<p/>";
-            body += "Resume attached.<p/>";
-            body += "Regards,<p>&nbsp;</>";
-            body += "<div style=\"font-weight:bold; font-size:large; color:#303030;\">";
-            body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
-            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
+            body += "Phone: " + phone + "<br>";
+            body += "Email: " + email;
+            body += "<div style=\"height:20pt;\">&nbsp;</div>";
+            body += "Regards,";
+            body += "<div style=\"height:20pt;\">&nbsp;</div>";
+            body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
+            body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+            body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div><div>Mobile: ";
             body += "(803) 873-6472</div>";
-            body += "<div><a href=\"https://twitter.com/paulajonesjr\" class=\"twitter-follow-button\" data-show-count=\"false\">Follow @paulajonesjr</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
+            body += "<div><a href=\"https://twitter.com/clearasoftware\" class=\"twitter-follow-button\" data-show-count=\"false\">";
+            body += "Follow @clearasoftware</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
             body += "</td></tr></table></body></html>";
 
             return body;

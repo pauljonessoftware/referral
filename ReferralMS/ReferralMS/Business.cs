@@ -868,7 +868,7 @@ namespace ReferralMS
                 mm.Subject = Subject;
 
                 // Create body from candidate datatable parameter
-                mm.Body = GetTicklerBody(dtCandidate);
+                mm.Body = GetNotice(dtCandidate);
                 mm.IsBodyHtml = true;
                 mm.Bcc.Add(GetMailAddress(From));
 
@@ -936,7 +936,7 @@ namespace ReferralMS
             }
         }
 
-        private string GetTicklerBody(DataTable dtCandidate)
+        private string GetNotice(DataTable dtCandidate)
         {
             DataRow row = dtCandidate.Rows[0];
 
@@ -945,14 +945,19 @@ namespace ReferralMS
             string location = row["Location"].ToString();
 
             string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
-            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
-            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td>Dear Recruiter,<p/>";
-            body += "We have a lead on a " + title + " with " + experience + " experience looking for a new opportunity in the " + location + " area. ";
-            body += "If you are interested in this lead and will offer a competitive referral fee, contact us at your earliest convenience.";
-            body += "<p>&nbsp;</p>Regards,<p/><div style=\"font-weight:bold; font-size:large; color:#303030;\">";
-            body += "Paul A. Jones, Jr.</div><div>President &amp; Founder</div><div>Clearasoft Technology Solutions, LLC</div><div>";
-            body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
-            body += "(803) 873-6472</div><div>Twitter: @paulajonesjr</div></td></tr></table></body></html>";
+            body += "<head><title>Resource Availability Notice: Clearasoft Technology Solutions, LLC</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+            body += "Dear Recruiter,<br><br>";
+            body += "Clearasoft Technology Solutions, LLC has identified a highly qualified " + title + " with " + experience + " ";
+            body += "experience. He/she is looking for an exciting and challenging new opportunity in the " + location + " area. ";
+            body += "If you are interested in this lead, please contact us at your earliest convenience. The referral fee is <span style=\"color:#C36900; text-decoration:underline;\">10% negotiable</span>. ";
+            body += "<br><br>Regards,<p>&nbsp;</p>";
+            body += "<div style=\"color:#C36900; font-size:18pt; font-weight:bold; font-family:Segoe Script, Verdana, Sans-Serif;\">Paul A. Jones, Jr.</div>";
+            body += "<div style=\"color:#909090; font-size:12pt;\">President &amp; Founder</div>";
+            body += "<div>Clearasoft Technology Solutions, LLC</div>";
+            body += "<div><a href=\"mailto:pauljonessoftware@gmail.com\">clearasoftware@gmail.com</a></div>";
+            body += "<div>Mobile: (803) 873-6472</div>";
+            body += "<div>Twitter: @clearasoftware</div></td></tr></table></body></html>";
 
             return body;
         }
@@ -971,7 +976,7 @@ namespace ReferralMS
             string title = row["JobTitle"].ToString();
 
             string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
-            body += "<head><title>Resource Availability Notice</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "<head><title>Human Resource Referral: Clearasoft Technology Solutions, LLC</title><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
             body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px;\"><tr><td><span style=\"font-size:20pt; font-weight:bold;\">DEAR RECRUITER,</span><p>";
             body += "The Information Technology Human Resource below is immediately available for a new assignment.<p>";
             body += "<b>CONTACT INFORMATION</b><p>";

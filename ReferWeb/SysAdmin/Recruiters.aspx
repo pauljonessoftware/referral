@@ -10,6 +10,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 
     <asp:HiddenField ID="hdnUserType" runat="server" Value="3" />
+    <asp:HiddenField ID="hdnNumberType" runat="server" Value="1" />
 
     <div style="height: 10px;">&nbsp;</div>
 
@@ -46,6 +47,11 @@
             <td style="text-align: right; padding: 5px;">Company Name:</td>
             <td style="text-align: left;">
                 <asp:TextBox ID="txtCompanyName" CssClass="txtMedInput" runat="server" /></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding: 5px;">Telephone:</td>
+            <td style="text-align: left;">
+                <asp:TextBox ID="txtTelephone" CssClass="txtMedInput" runat="server" /></td>
         </tr>
         <tr>
             <td style="text-align: right; padding: 5px;">URL:</td>

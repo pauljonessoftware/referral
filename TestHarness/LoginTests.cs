@@ -110,9 +110,9 @@ namespace TestHarness
         {
             int UserTypeId = 3;
             string FirstName = "Robert";
-            int MiddleInitialId = 0;
+            int? MiddleInitialId = null;
             string LastName = "Half";
-            int SuffixId = 0;
+            int? SuffixId = null;
             string Username = "president@roberthalf.com";
             string Password = "rhalf!";
             string Name = "Robert Half, Inc.";

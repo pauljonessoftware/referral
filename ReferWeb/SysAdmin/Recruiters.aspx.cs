@@ -61,11 +61,13 @@ public partial class SysAdmin_Recruiters : System.Web.UI.Page
         string url = txtURL.Text;
         string email = txtEmail.Text;
         string password = txtPassword.Text;
+        string telephone = txtTelephone.Text;
 
         int userTypeId = int.Parse(hdnUserType.Value);
+        int numberTypeId = int.Parse(hdnNumberType.Value);
 
         Business business = new Business(Utility.ConnectionString());
-        business.AddRecruiterAccount(userTypeId, firstName, middleInitialId, lastName, suffixId, email, password, companyName, url);
+        business.AddRecruiterAccount(userTypeId, firstName, middleInitialId, lastName, suffixId, email, password, companyName, url, telephone, numberTypeId);
 
         Response.Redirect("Recruiters.aspx");
     }
@@ -79,13 +81,21 @@ public partial class SysAdmin_Recruiters : System.Web.UI.Page
         {
             Label lblMiddleInitial = (Label)row.FindControl("lblMiddleInitial");
             Label lblMiddleInitialId = (Label)row.FindControl("lblMiddleInitialId");
-            int id = int.Parse(lblMiddleInitialId.Text);
-            lblMiddleInitial.Text = business.GetMiddleInitial(id);
+
+            if (lblMiddleInitial.Text != string.Empty)
+            {
+                int id = int.Parse(lblMiddleInitialId.Text);
+                lblMiddleInitial.Text = business.GetMiddleInitial(id);
+            }
 
             Label lblSuffix = (Label)row.FindControl("lblSuffix");
             Label lblSuffixId = (Label)row.FindControl("lblSuffixId");
-            int suffixId = int.Parse(lblSuffixId.Text);
-            lblSuffix.Text = business.GetSuffix(suffixId);
+
+            if (lblSuffixId.Text != string.Empty)
+            {
+                int suffixId = int.Parse(lblSuffixId.Text);
+                lblSuffix.Text = business.GetSuffix(suffixId);
+            }
         }
     }
 }

@@ -190,7 +190,7 @@ namespace ReferralMS
         #endregion
 
         #region User Methods
-        public int AddUser(int UserTypeId, string FirstName, int MiddleInitialId, string LastName, int SuffixId)
+        public int AddUser(int UserTypeId, string FirstName, int? MiddleInitialId, string LastName, int? SuffixId)
         {
             int rtn = -1;
 
@@ -199,11 +199,11 @@ namespace ReferralMS
                 string commandText = "spAddUser";
 
                 SqlParameter param0 = GetParameter("@Id", ParameterDirection.Output, DbType.Int32);
-                SqlParameter param1 = GetParameter("@UserTypeId", ParameterDirection.Input, DbType.String, UserTypeId.ToString());
+                SqlParameter param1 = GetParameter("@UserTypeId", ParameterDirection.Input, DbType.String, UserTypeId);
                 SqlParameter param2 = GetParameter("@FirstName", ParameterDirection.Input, DbType.String, FirstName);
-                SqlParameter param3 = GetParameter("@MiddleInitialId", ParameterDirection.Input, DbType.Int32, MiddleInitialId.ToString());
+                SqlParameter param3 = GetParameter("@MiddleInitialId", ParameterDirection.Input, DbType.Int32, MiddleInitialId);
                 SqlParameter param4 = GetParameter("@LastName", ParameterDirection.Input, DbType.String, LastName);
-                SqlParameter param5 = GetParameter("@SuffixId", ParameterDirection.Input, DbType.String, SuffixId.ToString());
+                SqlParameter param5 = GetParameter("@SuffixId", ParameterDirection.Input, DbType.String, SuffixId);
 
                 SqlCommand cmd = GetCommand(new SqlParameter[] { param0, param1, param2, param3, param4, param5 });
                 cmd.CommandText = commandText;
@@ -429,8 +429,8 @@ namespace ReferralMS
             return lst;
         }
 
-        public int AddRecruiterAccount(int UserTypeId, string FirstName, int MiddleInitialId, string LastName,
-            int SuffixId, string Email, string Password, string CompanyName, string URL)
+        public int AddRecruiterAccount(int UserTypeId, string FirstName, int? MiddleInitialId, string LastName,
+            int? SuffixId, string Email, string Password, string CompanyName, string URL, string Number, int NumberTypeId)
         {
             int rtn = -1;
 
@@ -448,7 +448,10 @@ namespace ReferralMS
                 // Add User Company Record
                 int UserCompanyId = AddUserCompany(userId, companyId);
 
-                rtn = 1;
+                // Add User Telephone Number
+                AddNumber(Number, userId, NumberTypeId);
+
+                rtn = userId;
             }
             catch (Exception exc)
             {
@@ -628,7 +631,7 @@ namespace ReferralMS
             }
             catch (Exception exc)
             {
-                LogException(exc.Message, "AccAccount");
+                LogException(exc.Message, "AddAccount");
                 return rtn;
             }
         }
@@ -969,11 +972,11 @@ namespace ReferralMS
             body += "<head><title>Resource Availability Notice: Clearasoft Technology Solutions, LLC </title>";
             body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
             body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
-            body += "Dear Recruiter,<br><br>";
+            body += "<div style=\"color:#d8610d; font-weight:bold;\">Dear Recruiter,</div><div style=\"height:10pt;\"></div>";
             body += "Clearasoft Technology Solutions, LLC has identified a highly qualified " + title + " with " + experience + " ";
             body += "experience. He/she is looking for an exciting and challenging new opportunity in the " + location + " area. ";
-            body += "If you are interested in this lead, please contact us at your earliest convenience. The referral fee is 10% negotiable. ";
-            body += "<br><br>Regards,<p>&nbsp;</p>";
+            body += "If you are interested in our lead, please contact us at your earliest convenience. The referral fee for ";
+            body += "the lead is 10% negotiable. <br><br>Regards,<p>&nbsp;</p>";
             body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
             body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
             body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div>";
@@ -1008,8 +1011,9 @@ namespace ReferralMS
             body += location + " area. His/her resume is attached.<br><div style=\"height:10pt;\"></div>";
             body += "<div style=\"color:#d8610d; font-weight:bold;\">Candidate Information</div>";
             body += "<div style=\"height:10pt;\">&nbsp;</div>";
-            body += firstName + " " + middleInitial + ". " + lastName + " " + suffix;
-            body += "<br />" + title + "<br />";
+            body += firstName + " " + middleInitial + ". " + lastName + " " + suffix + "<br>";
+            body += title + "<br>";
+            body += experience + " experience <br>";
             body += "Phone: " + phone + "<br>";
             body += "Email: " + email;
             body += "<div style=\"height:20pt;\">&nbsp;</div>";

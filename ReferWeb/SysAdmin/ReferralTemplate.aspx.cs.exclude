@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class SysAdmin_ReferralTemplate : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            string firstName = "Sharice";
+            string middleInitial = "M";
+            string lastName = "Brown";
+            string suffix = null;
+            string email = "sharicebrown@gmail.com";
+            string phone = "(803) 873-6472";
+            string experience = "10 years";
+            string title = "SQL Server DBA";
+            string location = "New York City; Manhattan";
+
+            string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
+            body += "<head><title>IT Referral: Clearasoft Technology Solutions, LLC </title>";
+            body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+            body += "<div style=\"color:#d8610d; font-weight:bold;\">Dear Recruiter,</div><div style=\"height:10pt;\"></div>";
+            body += "The Information Technology professional below is seeking a new employment opportunity in the ";
+            body += location + " area. His/her resume is attached.<br><div style=\"height:10pt;\"></div>";
+            body += "<div style=\"color:#d8610d; font-weight:bold;\">Candidate Information</div>";
+            body += "<div style=\"height:10pt;\">&nbsp;</div>";
+            body += firstName + " " + middleInitial + ". " + lastName + " " + suffix + "<br>";
+            body += title + "<br>";
+            body += experience + " experience <br>";
+            body += "Phone: " + phone + "<br>";
+            body += "Email: " + email;
+            body += "<div style=\"height:20pt;\">&nbsp;</div>";
+            body += "Regards,";
+            body += "<div style=\"height:20pt;\">&nbsp;</div>";
+            body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
+            body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+            body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div><div>Mobile: ";
+            body += "(803) 873-6472</div>";
+            body += "<div><a href=\"https://twitter.com/clearasoftware\" class=\"twitter-follow-button\" data-show-count=\"false\">";
+            body += "Follow @clearasoftware</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
+            body += "</td></tr></table></body></html>";
+
+            divtext.InnerHtml = body;
+        }
+    }
+}

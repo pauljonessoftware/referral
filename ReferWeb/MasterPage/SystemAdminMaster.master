@@ -8,6 +8,7 @@
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
     <link type="text/css" href="../Style/StyleSheet.css" rel="stylesheet" />
+    <link type="text/css" href="../Scripts/bootstrap.min.js" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server">

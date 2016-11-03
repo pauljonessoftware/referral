@@ -1,0 +1,18 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ReferralTemplate.aspx.cs" Inherits="SysAdmin_ReferralTemplate" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <link type="text/css" href="../Scripts/bootstrap.min.js" rel="stylesheet" /></head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <table style="width:720px;">
+            <div id="divtext" runat="server" />
+        </table>
+    </div>
+    </form>
+</body>
+</html>

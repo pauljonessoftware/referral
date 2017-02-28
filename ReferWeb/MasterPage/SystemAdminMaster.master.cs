@@ -27,4 +27,16 @@ public partial class MasterPage_SystemAdminMaster : System.Web.UI.MasterPage
             }
         }
     }
+
+    protected void lnkLogout_Click(object sender, EventArgs e)
+    {
+        if (Session["IsLoggedIn"] != null)
+        {
+            Session["IsLoggedIn"] = null;
+
+            // redirect to login screen
+            Response.Redirect("default.aspx");
+        }
+
+    }
 }

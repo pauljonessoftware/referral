@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <title>Clearasoft Technology Solutions, LLC</title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
     <link type="text/css" href="../Style/StyleSheet.css" rel="stylesheet" />
@@ -21,7 +21,7 @@
                                 <td>
                                     <asp:LinkButton ID="lnkAdmin" runat="server" Text="Admin" PostBackUrl="~/SysAdmin/Switchboard.aspx" />
                                     |
-                                    <asp:LinkButton ID="lnkLogout" runat="server" Text="Logout" />
+                                    <asp:LinkButton ID="lnkLogout" runat="server" Text="Logout" OnClick="lnkLogout_Click" />
                                 </td>
                             </tr>
                         </table>

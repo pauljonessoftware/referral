@@ -24,6 +24,13 @@
                 <asp:LinkButton ID="lnkCandidateAdmin" runat="server" Text="Candidate Administration" PostBackUrl="~/SysAdmin/Candidates.aspx" />
             </td>
         </tr>
+        
+        <tr>
+            <td style="text-align: left; padding:5px; width:920px;">
+                <asp:LinkButton ID="lnkOpportunity" runat="server" Text="Opportunity Administration" PostBackUrl="~/SysAdmin/Opportunity.aspx"/>
+            </td>
+        </tr>
+
     </table>
 </asp:Content>
 

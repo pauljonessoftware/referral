@@ -37,13 +37,21 @@ public partial class SysAdmin_RecruiterList : System.Web.UI.Page
         {
             Label lblMiddleInitial = (Label)row.FindControl("lblMiddleInitial");
             Label lblMiddleInitialId = (Label)row.FindControl("lblMiddleInitialId");
-            int id = int.Parse(lblMiddleInitialId.Text);
-            lblMiddleInitial.Text = business.GetMiddleInitial(id);
+
+            if (!String.IsNullOrEmpty(lblMiddleInitialId.Text))
+            {
+                int id = int.Parse(lblMiddleInitialId.Text);
+                lblMiddleInitial.Text = business.GetMiddleInitial(id);
+            }
 
             Label lblSuffix = (Label)row.FindControl("lblSuffix");
             Label lblSuffixId = (Label)row.FindControl("lblSuffixId");
-            int suffixId = int.Parse(lblSuffixId.Text);
-            lblSuffix.Text = business.GetSuffix(suffixId);
+
+            if (!String.IsNullOrEmpty(lblSuffix.Text))
+            {
+                int suffixId = int.Parse(lblSuffixId.Text);
+                lblSuffix.Text = business.GetSuffix(suffixId);
+            }
         }
     }
 
@@ -52,20 +60,24 @@ public partial class SysAdmin_RecruiterList : System.Web.UI.Page
         GridView grd = grdRecruiters;
         List<int> lstRecruiterId = new List<int>();
         int Id = 0;
-        double amount = double.Parse(txtAmount.Text);
+        double amount = 0;
+        if (!string.IsNullOrEmpty(txtAmount.Text))
+        {
+            amount = double.Parse(txtAmount.Text);
+        }
         string rate = ddlRate.SelectedValue;
 
         foreach (GridViewRow row in grd.Rows)
-        {
+        { 
             if (row.RowType == DataControlRowType.DataRow)
             {
                 CheckBox chkRecruiter = (CheckBox)row.FindControl("chkRecruiter");
-                if (chkRecruiter.Checked)
-                {
+                //if (chkRecruiter.Checked)
+                //{
                     Label lbl = (Label)row.FindControl("lblRecruiterId");
                     Id = int.Parse(lbl.Text);
                     lstRecruiterId.Add(Id);
-                }
+                //}
             }
         }
 

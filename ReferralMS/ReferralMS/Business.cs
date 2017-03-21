@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 #endregion
 
 namespace ReferralMS
@@ -938,17 +939,36 @@ namespace ReferralMS
 
                 DataTable dtRecruiters = GetRecruiters(lstRecruiterIds);
 
-                foreach (DataRow row in dtRecruiters.Rows)
-                {
-                    recruiterId = int.Parse(row["UserId"].ToString());
-                    recruiterEmailAddress = row["email"].ToString();
-                    mm.Bcc.Add(GetMailAddress(recruiterEmailAddress));
-                    numberOfMessages++;
+                string operation = ConfigurationManager.AppSettings["Operation"];
 
-                    LogReferral(Amount, candidateId, recruiterId, null);
+                if (operation.ToLower() == "test")
+                {
+                    mm.Bcc.Add(GetMailAddress("pauljonessoftware@gmail.com"));
+                }
+                else
+                {
+                    foreach (DataRow row in dtRecruiters.Rows)
+                    {
+                        try
+                        {
+                            recruiterId = int.Parse(row["UserId"].ToString());
+                            recruiterEmailAddress = row["email"].ToString();
+                            if (!string.IsNullOrEmpty(recruiterEmailAddress))
+                            {
+                                mm.Bcc.Add(GetMailAddress(recruiterEmailAddress));
+                                numberOfMessages++;
+                            }
+
+                            //LogReferral(Amount, candidateId, recruiterId, null);
+                        }
+                        catch (Exception exc)
+                        {
+                            LogException(exc.Message, "SendMessageWithAttachment; recruiter id: " + recruiterId + " recruiterEmailAddress: " + recruiterEmailAddress);
+                        }
+                    }
                 }
 
-                GetSMTPServer().Send(mm);
+                //GetSMTPServer().Send(mm);
 
                 return numberOfMessages;
 
@@ -1001,31 +1021,62 @@ namespace ReferralMS
             string experience = row["Experience"].ToString();
             string title = row["JobTitle"].ToString();
             string location = row["Location"].ToString();
+            string body = string.Empty;
 
-            string body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
-            body += "<head><title>IT Referral: Clearasoft Technology Solutions, LLC </title>";
-            body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
-            body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
-            body += "<div style=\"color:#d8610d; font-weight:bold;\">Dear Recruiter,</div><div style=\"height:10pt;\"></div>";
-            body += "The Information Technology professional below is seeking a new employment opportunity in the ";
-            body += location + " area. His/her resume is attached.<br><div style=\"height:10pt;\"></div>";
-            body += "<div style=\"color:#d8610d; font-weight:bold;\">Candidate Information</div>";
-            body += "<div style=\"height:10pt;\">&nbsp;</div>";
-            body += firstName + " " + middleInitial + ". " + lastName + " " + suffix + "<br>";
-            body += title + "<br>";
-            body += experience + " experience <br>";
-            body += "Phone: " + phone + "<br>";
-            body += "Email: " + email;
-            body += "<div style=\"height:20pt;\">&nbsp;</div>";
-            body += "Regards,";
-            body += "<div style=\"height:20pt;\">&nbsp;</div>";
-            body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
-            body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
-            body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div><div>Mobile: ";
-            body += "(803) 873-6472</div>";
-            body += "<div><a href=\"https://twitter.com/clearasoftware\" class=\"twitter-follow-button\" data-show-count=\"false\">";
-            body += "Follow @clearasoftware</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
-            body += "</td></tr></table></body></html>";
+            string mode = ConfigurationManager.AppSettings["Mode"];
+
+            switch (mode)
+            {
+                case "Personal":
+                    body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
+                    body += "<head><title>Candidate Available.</title>";
+                    body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+                    body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+                    body += "<div style=\"font-weight:bold; font-size:14pt; font-family:Verdana, Sans Serif; color:#d8610d;\">Dear Recruiter,</div><div style=\"height:11pt;\"></div>";
+                    body += "I am Senior Software Developer on the .Net platform who is currently looking for a new assignment in either Columbia, South Carolina, ";
+                    body += "Charlotte, North Carolina or surrounding cities. I have over 10 years’ experience on the platform and am ";
+                    body += "available immediately.";
+                    body += "<br><div style=\"height:10pt;\"></div>";
+                    body += "Please see the attached resume. If you have an available opportunity you would like to discuss, feel free to contact me at your earliest convenience.";
+                    body += "<div style=\"height:20pt;\">&nbsp;</div>";
+                    body += "Regards,";
+                    body += "<div style=\"height:20pt;\">&nbsp;</div>";
+                    body += "<div style=\"font-weight:bold; font-size:14pt; font-family:Verdana, Sans Serif; color:#d8610d;\">";
+                    body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:11pt;\">Senior Software Developer</div><div>";
+                    body += "<a href=\"mailto:pauljonessoftware@gmail.com\">pauljonessoftware@gmail.com</a></div><div>Mobile: ";
+                    body += "(803) 873-6472</div>";
+                    body += "</td></tr></table></body></html>";
+                    break;
+                case "Business":
+                    body = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\">";
+                    body += "<head><title>IT Referral: Clearasoft Technology Solutions, LLC </title>";
+                    body += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">";
+                    body += "</head><body><table style=\"border-collapse:collapse; margin:3px; padding:3px; width:720px;\"><tr><td>";
+                    body += "<div style=\"color:#d8610d; font-weight:bold;\">Dear Recruiter,</div><div style=\"height:10pt;\"></div>";
+                    body += "The Information Technology professional below is seeking a new employment opportunity in the ";
+                    body += location + " area. His/her resume is attached.<br><div style=\"height:10pt;\"></div>";
+                    body += "<div style=\"color:#d8610d; font-weight:bold;\">Candidate Information</div>";
+                    body += "<div style=\"height:10pt;\">&nbsp;</div>";
+                    body += firstName + " " + middleInitial + ". " + lastName + " " + suffix + "<br>";
+                    body += title + "<br>";
+                    body += experience + " experience <br>";
+                    body += "Phone: " + phone + "<br>";
+                    body += "Email: " + email;
+                    body += "<div style=\"height:20pt;\">&nbsp;</div>";
+                    body += "Regards,";
+                    body += "<div style=\"height:20pt;\">&nbsp;</div>";
+                    body += "<div style=\"font-weight:bold; font-size:20pt; font-family:Segoe Script, Verdana, Sans Serif; color:#d8610d;\">";
+                    body += "Paul A. Jones, Jr.</div><div style=\"color:#606060; font-size:14pt;\">President</div><div>Clearasoft Technology Solutions, LLC</div><div>";
+                    body += "<a href=\"mailto:clearasoftware@gmail.com\">clearasoftware@gmail.com</a></div><div>Mobile: ";
+                    body += "(803) 873-6472</div>";
+                    body += "<div><a href=\"https://twitter.com/clearasoftware\" class=\"twitter-follow-button\" data-show-count=\"false\">";
+                    body += "Follow @clearasoftware</a><script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></div>";
+                    body += "</td></tr></table></body></html>";
+                    break;
+                default:
+                    LogException("Referral mode not set", "GetReferralText");
+                    break;
+            }
 
             return body;
         }

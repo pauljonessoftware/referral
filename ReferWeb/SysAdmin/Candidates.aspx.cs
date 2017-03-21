@@ -198,7 +198,7 @@ public partial class SysAdmin_Candidates : System.Web.UI.Page
         if (row.RowType == DataControlRowType.DataRow)
         {
             Label lblMiddleInitialId = (Label)row.FindControl("lblMiddleInitialId");
-            if (lblMiddleInitialId.Text.Length > 0)
+            if (!String.IsNullOrEmpty(lblMiddleInitialId.Text) && lblMiddleInitialId.Text.Length > 0)
             {
                 middleInitialId = int.Parse(lblMiddleInitialId.Text);
             }

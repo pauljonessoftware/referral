@@ -892,7 +892,7 @@ namespace ReferralMS
                     numberOfMessages++;
                 }
 
-                GetSMTPServer().Send(mm);
+                //GetSMTPServer().Send(mm);
 
                 LogNotice(candidateId, numberOfMessages);
 

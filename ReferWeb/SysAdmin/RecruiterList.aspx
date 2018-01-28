@@ -15,7 +15,13 @@
 
     <table class="tableOutline" style="text-align: left; border-collapse: collapse; width: 920px; margin: 5px;">
         <tr>
-            <td>Select Recruiters</td>
+            <td>
+                <asp:CheckBox 
+                    ID="chkSelectAllRecruiters" 
+                    runat="server" 
+                    Text="Select All Recruiters" 
+                    AutoPostBack="true" OnCheckedChanged="chkSelectAllRecruiters_CheckedChanged" />
+            </td>
         </tr>
     </table>
 

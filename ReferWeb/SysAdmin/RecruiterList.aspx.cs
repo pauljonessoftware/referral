@@ -28,6 +28,14 @@ public partial class SysAdmin_RecruiterList : System.Web.UI.Page
         grdRecruiters.DataBind();
     }
 
+    private void BindGridView(bool IsChecked)
+    {
+        Business business = new Business(Utility.ConnectionString());
+        DataTable dt = business.GetRecruiters();
+        grdRecruiters.DataSource = dt;
+        grdRecruiters.DataBind();
+    }
+
     protected void grdRecruiters_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         GridViewRow row = e.Row;
@@ -108,9 +116,19 @@ public partial class SysAdmin_RecruiterList : System.Web.UI.Page
             fileType = row["FileType"].ToString();
             data = (byte[])row["Data"];
 
-            business.SendMessageWithAttachment(lstRecruiterIds, dtCandidate, from, subject, data, name, fileType, amount);
+            //TODO: Uncomment to sent referral
+            //business.SendMessageWithAttachment(lstRecruiterIds, dtCandidate, from, subject, data, name, fileType, amount);
 
             Response.Redirect("EmailSent.aspx?MessageType=Referral Acknowledgement");
+        }
+    }
+    protected void chkSelectAllRecruiters_CheckedChanged(object sender, EventArgs e)
+    {
+        CheckBox chkAllRecruiters = (CheckBox)sender;
+
+        if (chkAllRecruiters.Checked)
+        {
+
         }
     }
 }

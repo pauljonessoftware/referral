@@ -505,28 +505,28 @@ namespace TestHarness
 
         #region Mail Tests
 
-        [TestMethod]
-        public void SendReferralTest()
-        {
-            Business business = new Business(connectionString);
-            string from = "pjones@refermicro.com";
-            string to = "recruiter@recruiter.com";
-            string subject = "Resource Available";
-            string body = ".Net Engineer for new assignment";
+        //[TestMethod]
+        //public void SendReferralTest()
+        //{
+        //    Business business = new Business(connectionString);
+        //    string from = "pauljonessoftware@gmail.com";
+        //    string to = "recruiter@recruiter.com";
+        //    string subject = "Resource Available";
+        //    string body = ".Net Engineer for new assignment";
 
-            //int numberOfMessagesSent = business.SendMessage(from, subject, to, body);
+        //    int numberOfMessagesSent = business.SendMessage(from, subject, to, body);
 
-            //Assert.IsTrue(numberOfMessagesSent > 0, "ERROR: No messages sent");
-        }
+        //    Assert.IsTrue(numberOfMessagesSent > 0, "ERROR: No messages sent");
+        //}
 
-        [TestMethod]
-        public void GetCredentials()
-        {
-            Business business = new Business(connectionString);
-            DataTable dt = business.GetCredentials();
+        //[TestMethod]
+        //public void GetCredentials()
+        //{
+        //    Business business = new Business(connectionString);
+        //    DataTable dt = business.GetCredentials();
 
-            Assert.IsTrue(dt.Rows.Count > 0, "ERROR: No credentials found");
-        }
+        //    Assert.IsTrue(dt.Rows.Count > 0, "ERROR: No credentials found");
+        //}
 
         #endregion
 
